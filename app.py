@@ -9,4 +9,3 @@ def home():
 @app.route('/problematic')
 def problematic():
     return render_template('problematic.html')
-
