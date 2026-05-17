@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FocusPet - Productivity Assistant</title>
-    <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
 </head>
 <body>
 
@@ -13,7 +13,7 @@
     <div class="RangelMenu">
         
         <div class="pet" id="pet">
-            <img src="../resources/rangel.png" alt="pet">
+            <img src="{{ url_for('static', filename='resources/rangel.png') }}" alt="pet">
         </div>
     </div>
 
@@ -34,7 +34,7 @@
     </div>
 
     <div class="phone-box">
-        <video src="../resources/presentacion.mp4" autoplay muted loop></video>
+        <video src="{{ url_for('static', filename='resources/presentacion.mp4') }}" autoplay muted loop></video>
     </div>
 </div>
        
@@ -44,23 +44,23 @@
 
         <div class="team-grid">
             <div class="team-member">
-                <img src="../resources/juan.jpeg" alt="Juan ">
+                <img src="{{ url_for('static', filename='resources/juan.jpeg') }}" alt="Juan ">
                 <p>Juan David Vargas</p>
             </div>
             
 
             <div class="team-member">
-                <img src="../resources/camilo.jpeg" alt="Camilo Andrés Sichaca">
+                <img src="{{ url_for('static', filename='resources/camilo.jpeg') }}" alt="Camilo Andrés Sichaca">
                 <p>Camilo Andrés Sichaca</p>
             </div>
 
             <div class="team-member">
-                <img src="../resources/sharick.jpeg" alt="Sharick Lorena Doncel">
+                <img src="{{ url_for('static', filename='resources/sharick.jpeg') }}" alt="Sharick Lorena Doncel">
                 <p>Sharick Lorena Doncel</p>
             </div>
 
             <div class="team-member">
-                <img src="../resources/santiago.jpeg" alt="Santiago José Morales">
+                <img src="{{ url_for('static', filename='resources/santiago.jpeg') }}" alt="Santiago José Morales">
                 <p>Santiago José Morales</p>
             </div>
         </div>
