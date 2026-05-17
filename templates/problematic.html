@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Problem Statement & Justification</title>
-    <!-- Optional icons for professional dynamism -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
 </head>
 <body>
 
     <main class="main-container">
+
+            <a href="/" class="btn-back">← Back to Dashboard</a>
+
         
         <header class="page-header">
             <span class="badge">Project Context</span>
@@ -33,7 +35,7 @@
             <div class="image-block">
                 <div class="image-placeholder">
                     <i class="fa-regular fa-image"></i>
-                    <img src="../resources/ProcrastinationImage.png" alt="procrastination">
+                    <img src="{{ url_for('static', filename='resources/ProcrastinationImage.png') }}" alt="procrastination">
                 </div>
             </div>
         </section>
@@ -53,7 +55,7 @@
             <div class="image-block">
                 <div class="image-placeholder">
                     <i class="fa-regular fa-image"></i>
-                    <img src="../resources/simulationApp.png" alt="">
+                    <img src="{{ url_for('static', filename='resources/simulationApp.png') }}" alt="">
                 </div>
             </div>
         </section>

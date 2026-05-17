@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusPet - Dataset Framework</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+</head>
+<body>
+
+<div class="main-container">
+    
+    <a href="/" class="btn-back">← Back to Dashboard</a>
+
+    <div class="page-header">
+        <span class="badge">Machine Learning Phase</span>
+        <h1>FocusPet Beta Dataset</h1>
+        <p class="subtitle">Comprehensive technical overview and complete testing records metrics retrieved from our 55 evaluation beta-testers framework.</p>
+    </div>
+
+    <div class="content-section">
+        <div class="text-block glass-card">
+            <div class="section-title">
+                <h2 style="color: #ffffff;">Dataset Dimensions & Structure</h2>
+            </div>
+            <p>The dataset is strategically organized across four foundational operational axes. These metrics allow the optimization of statistical patterns and predictive Machine Learning models targeting productivity behaviors:</p>
+            
+            <ul class="custom-list">
+                <li><strong>Identification & Demographics:</strong> Basic individual indicators tracking tracking variance patterns.</li>
+                <li><strong>Performance & Efficiency Metrics:</strong> Direct comparative measurement of active screen allocations and application boundaries workflows.</li>
+                <li><strong>Engagement & Gamification:</strong> Quantifiable behavioral interaction feedback loops paired with the in-app reward infrastructure.</li>
+                <li><strong>Target Outcome Variable:</strong> Final descriptive evaluation feedback score provided directly by the user.</li>
+            </ul>
+        </div>
+
+        <div class="text-block glass-card">
+            <div class="section-title">
+                <h2 style="color: #ffffff;">Variables Dictionary</h2>
+            </div>
+            <ul class="custom-list" style="list-style-type: none; padding-left: 0;">
+                <li style="margin-bottom: 12px;">🔹 <strong>usuario_id:</strong> Unique numerical registration identity code assigned per tester.</li>
+                <li style="margin-bottom: 12px;">🔹 <strong>edad:</strong> Participant integer age ranging from a spectrum of 13 to 30 years old.</li>
+                <li style="margin-bottom: 12px;">🔹 <strong>horas_pantalla_pre:</strong> Baseline daily average screen usage time hours prior to deployment.</li>
+                <li style="margin-bottom: 12px;">🔹 <strong>horas_pantalla_post:</strong> Observed daily average device screening usage during the active trial.</li>
+                <li style="margin-bottom: 12px;">🔹 <strong>sesiones_exitosas:</strong> Completed focus timers segments carried through without anomalies.</li>
+                <li style="margin-bottom: 12px;">🔹 <strong>sesiones_fallidas:</strong> Abandoned intervals or attempts accessing blocked apps.</li>
+                <li style="margin-bottom: 12px;">🔹 <strong>interacciones_rangel:</strong> Volumetric action clicks and attention inputs dedicated to the pet companion.</li>
+                <li style="margin-bottom: 12px;">🔹 <strong>trivias_ganadas:</strong> Correct educational quiz challenge milestones solved.</li>
+                <li style="margin-bottom: 12px;">🔹 <strong>recompensas_canjeadas:</strong> Total custom perks unlocked using virtual coin assets.</li>
+                <li style="margin-bottom: 12px;">⭐ <strong>calificacion_beta [TARGET]:</strong> User validation score ranging from a metric scale of 1 to 5.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="glass-card" style="padding: 25px 20px;">
+        <div class="section-title">
+            <h2 style="color: #ffffff; margin-bottom: 10px;">Complete Test Phase Records</h2>
+        </div>
+        <p style="margin-bottom: 20px;">Displaying all continuous telemetry items currently populated inside the dataset model frame:</p>
+        
+        <div class="table-wrapper">
+            <table class="dataset-table">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Age</th>
+                        <th>Screen Pre (h)</th>
+                        <th>Screen Post (h)</th>
+                        <th>Success Sessions</th>
+                        <th>Failed Sessions</th>
+                        <th>Rangel Inter.</th>
+                        <th>Trivia Won</th>
+                        <th>Rewards Claimed</th>
+                        <th>Beta Rating</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in dataset %}
+                    <tr>
+                        <td>#{{ row['usuario_id'] | int }}</td>
+                        <td>{{ row['edad'] | int }} y/o</td>
+                        <td>{{ row['horas_pantalla_pre'] }} h</td>
+                        <td>{{ row['horas_pantalla_post'] }} h</td>
+                        <td>{{ row['sesiones_exitosas'] | int }}</td>
+                        <td>{{ row['sesiones_fallidas'] | int }}</td>
+                        <td>{{ row['interacciones_rangel'] | int }}</td>
+                        <td>{{ row['trivias_ganadas'] | int }}</td>
+                        <td>{{ row['recompensas_canjeadas'] | int }}</td>
+                        <td class="target-cell">{{ row['calificacion_beta'] | int }} ★</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

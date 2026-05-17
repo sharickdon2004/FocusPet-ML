@@ -210,6 +210,7 @@ a {
     font-weight: 800;
     margin: 16px 0 12px;
     background: linear-gradient(135deg, #9c845f 50%, #ca9964);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -363,4 +364,82 @@ a {
     .image-placeholder, .image-block img {
         height: 260px; 
     }
+}
+
+/* _____ DATASET TABLE STYLES _____ */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto; 
+    margin-top: 30px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.dataset-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.95rem;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dataset-table th {
+    background-color: #3e6f55;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 16px 12px;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.dataset-table td {
+    padding: 14px 12px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dataset-table tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.dataset-table tbody tr:hover {
+    background: rgba(111, 143, 110, 0.25);
+    transition: background 0.2s ease;
+}
+
+.dataset-table th:first-child,
+.dataset-table td:first-child {
+    font-weight: bold;
+    color: #ca9964;
+}
+
+.target-cell {
+    font-weight: 800;
+    color: #ca9964;
+    background: rgba(202, 153, 100, 0.1);
+}
+
+/* Enlace para volver */
+.btn-back {
+    display: inline-block;
+    background: #3e6f55;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    transition: 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-back:hover {
+    background: #2f6b4f;
+    transform: translateX(-4px);
 }
