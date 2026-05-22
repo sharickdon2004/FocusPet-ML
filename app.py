@@ -15,7 +15,7 @@ def problematic():
 
 @app.route('/dataset')
 def dataset_explicacion():
-    csv_path = os.path.join(os.path.dirname(__file__), 'Dataset_Beta_FocusPet_V2 - Dataset_Beta_FocusPet_V2.csv')
+    csv_path = os.path.join(os.path.dirname(__file__), 'DataSet_FocusPet.csv')
     df = pd.read_csv(csv_path)
     records = df.to_dict(orient='records')
     return render_template('dataset.html', dataset=records)
@@ -32,14 +32,14 @@ def decisiontree():
         try:
             # Obtener datos del formulario
             datos = [
-                float(request.form['edad']),
-                float(request.form['horas_pantalla_pre']),
-                float(request.form['horas_pantalla_post']),
-                float(request.form['sesiones_exitosas']),
-                float(request.form['sesiones_fallidas']),
-                float(request.form['interacciones_rangel']),
-                float(request.form['trivias_ganadas']),
-                float(request.form['recompensas_canjeadas'])
+                float(request.form['age']),
+                float(request.form['screen_time_pre']),
+                float(request.form['screen_time_post']),
+                float(request.form['successful_sessions']),
+                float(request.form['failed_sessions']),
+                float(request.form['rangel_interactions']),
+                float(request.form['trivias_won']),
+                float(request.form['rewards_redeemed'])
             ]
             
             # Realizar predicción

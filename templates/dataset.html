@@ -77,16 +77,16 @@
                 <tbody>
                     {% for row in dataset %}
                     <tr>
-                        <td>#{{ row['usuario_id'] | int }}</td>
-                        <td>{{ row['edad'] | int }} y/o</td>
-                        <td>{{ row['horas_pantalla_pre'] }} h</td>
-                        <td>{{ row['horas_pantalla_post'] }} h</td>
-                        <td>{{ row['sesiones_exitosas'] | int }}</td>
-                        <td>{{ row['sesiones_fallidas'] | int }}</td>
-                        <td>{{ row['interacciones_rangel'] | int }}</td>
-                        <td>{{ row['trivias_ganadas'] | int }}</td>
-                        <td>{{ row['recompensas_canjeadas'] | int }}</td>
-                        <td class="target-cell">{{ row['calificacion_beta'] | int }} ★</td>
+                        <td>#{{ row['user_id'] | int }}</td>
+                        <td>{{ row['age'] | int }} y/o</td>
+                        <td>{{ row['screen_time_pre'] }} h</td>
+                        <td>{{ row['screen_time_post'] }} h</td>
+                        <td>{{ row['successful_sessions'] | int }}</td>
+                        <td>{{ row['failed_sessions'] | int }}</td>
+                        <td>{{ row['rangel_interactions'] | int }}</td>
+                        <td>{{ row['trivias_won'] | int }}</td>
+                        <td>{{ row['rewards_redeemed'] | int }}</td>
+                        <td class="target-cell">{{ row['beta_rating'] | int }} ★</td>
                     </tr>
                     {% endfor %}
                 </tbody>

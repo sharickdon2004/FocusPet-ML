@@ -21,20 +21,20 @@ class FocusPetModel:
     
     def entrenar_modelo(self):
         """Trains the decision tree model"""
-        df = pd.read_csv('Dataset_Beta_FocusPet_V2 - Dataset_Beta_FocusPet_V2.csv')
+        df = pd.read_csv('DataSet_FocusPet.csv')
         
         X = df[[
-            'edad',
-            'horas_pantalla_pre',
-            'horas_pantalla_post',
-            'sesiones_exitosas',
-            'sesiones_fallidas',
-            'interacciones_rangel',
-            'trivias_ganadas',
-            'recompensas_canjeadas'
+            'age',
+            'screen_time_pre',
+            'screen_time_post',
+            'successful_sessions',
+            'failed_sessions',
+            'rangel_interactions',
+            'trivias_won',
+            'rewards_redeemed'
         ]]
         
-        Y = df['calificacion_beta']
+        Y = df['beta_rating']
         
         X_train, X_test, Y_train, Y_test = train_test_split(
             X, Y, test_size=0.2, random_state=42
