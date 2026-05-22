@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Random Forest - FocusPet</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style/randomforest.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>🌲 Random Forest Model</h1>
+
+        <p>
+            This machine learning model analyzes user behavior,
+            productivity, and digital habits using multiple decision trees.
+        </p>
+
+    </div>
+
+    <!-- ================= FORM ================= -->
+
+    <form method="POST" action="/randomforest">
+
+        <input type="number"
+               name="edad"
+               placeholder="Age"
+               required>
+
+        <input type="number"
+               step="0.1"
+               name="horas_pantalla_pre"
+               placeholder="Screen Time Before"
+               required>
+
+        <input type="number"
+               step="0.1"
+               name="horas_pantalla_post"
+               placeholder="Screen Time After"
+               required>
+
+        <input type="number"
+               name="sesiones_exitosas"
+               placeholder="Successful Sessions"
+               required>
+
+        <input type="number"
+               name="sesiones_fallidas"
+               placeholder="Failed Sessions"
+               required>
+
+        <input type="number"
+               name="interacciones_rangel"
+               placeholder="Rangel Interactions"
+               required>
+
+        <input type="number"
+               name="trivias_ganadas"
+               placeholder="Trivias Won"
+               required>
+
+        <input type="number"
+               name="recompensas_canjeadas"
+               placeholder="Rewards Redeemed"
+               required>
+
+        <button type="submit">
+            Predict User Adaptation
+        </button>
+
+    </form>
+
+    <!-- ================= RESULT ================= -->
+
+    {% if resultado %}
+
+        {% if resultado.error %}
+
+            <div class="result-section">
+
+                <h2>Error</h2>
+
+                <p>{{ resultado.error }}</p>
+
+            </div>
+
+        {% else %}
+
+            <div class="result-section">
+
+                <h2>{{ resultado.title }}</h2>
+
+                <p>{{ resultado.description }}</p>
+
+                <div class="motivation">
+                    {{ resultado.motivation }}
+                </div>
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+
+                        <h3>Prediction</h3>
+
+                        <p>{{ resultado.prediction }}/4</p>
+
+                    </div>
+
+                    <div class="stat-card">
+
+                        <h3>Accuracy</h3>
+
+                        <p>
+                            {{ (resultado.accuracy * 100)|round(2) }}%
+                        </p>
+
+                    </div>
+
+                    <div class="stat-card">
+
+                        <h3>Model</h3>
+
+                        <p>Random Forest</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
