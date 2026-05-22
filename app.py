@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 import pandas as pd
 import os
 from decisiontree import model
+from randomforest import model as randomforest_model
 
 app = Flask(__name__)
 
@@ -64,6 +65,23 @@ def decisiontree():
                          motivation=motivation,
                          error=error,
                          accuracy=model.get_accuracy())
+
+
+
+@app.route('/randomforest', methods=['GET', 'POST'])
+def randomforest():
+
+    resultado = None
+
+    if request.method == 'POST':
+        resultado = randomforest_model.procesar(request.form)
+
+    return render_template(
+        'randomforest.html',
+        resultado=resultado
+    )
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

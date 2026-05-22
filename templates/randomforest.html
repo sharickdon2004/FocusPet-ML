@@ -1,352 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FocusPet - Random Forest | Prediction Model</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+
+    <title>Random Forest - FocusPet</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style/randomforest.css') }}">
+
 </head>
+
 <body>
 
-<div class="decisiontree-container">
-    <h1 class="decisiontree-title">🌲 Random Forest Classifier</h1>
-    <p class="decisiontree-subtitle">Ensemble Machine Learning model to predict user rating based on digital behavior</p>
+<div class="container">
 
-    <!-- Navigation buttons -->
-    <div class="nav-buttons">
-        <a href="/" class="nav-btn">🏠 Home</a>
-        <a href="/problematic" class="nav-btn">📖 Problematic</a>
-        <a href="/dataset" class="nav-btn">📊 Dataset</a>
-    </div>
+    <div class="header">
 
-    <!-- SECTION 1: What is Random Forest? -->
-    <div class="info-section">
-        <div class="info-title">
-            <span>🌲</span> What is Random Forest?
-        </div>
-        <p class="info-text">
-            <strong>Random Forest</strong> is an ensemble learning method that creates multiple decision trees (typically 100+) and combines their predictions. 
-            Each tree "votes" for a rating, and the most voted rating becomes the final prediction. This approach significantly reduces overfitting and 
-            improves accuracy compared to a single decision tree.
+        <h1>🌲 Random Forest Model</h1>
+
+        <p>
+            This machine learning model analyzes user behavior,
+            productivity, and digital habits using multiple decision trees.
         </p>
-        <div class="model-stats">
-            <div class="stat">
-                <div class="stat-value">🌲 100</div>
-                <div class="stat-label">Decision Trees</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">🌳 Depth: 10</div>
-                <div class="stat-label">Max Tree Depth</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">Gini</div>
-                <div class="stat-label">Split Criterion</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">🎯 Bootstrap</div>
-                <div class="stat-label">Sampling Method</div>
-            </div>
-        </div>
+
     </div>
 
-    <!-- SECTION 2: Why Random Forest > Decision Tree -->
-    <div class="info-section">
-        <div class="info-title">
-            <span>📈</span> Why Random Forest?
-        </div>
-        <div class="comparison-grid">
-            <div class="comparison-card">
-                <h4>🌳 Single Decision Tree</h4>
-                <ul>
-                    <li>❌ Prone to overfitting</li>
-                    <li>❌ Sensitive to data variations</li>
-                    <li>❌ Less stable predictions</li>
-                    <li>❌ No confidence score</li>
-                </ul>
-            </div>
-            <div class="comparison-card good">
-                <h4>🌲 Random Forest</h4>
-                <ul>
-                    <li>✅ Reduces overfitting significantly</li>
-                    <li>✅ More robust and stable</li>
-                    <li>✅ Higher accuracy (5-10% better)</li>
-                    <li>✅ Provides confidence probabilities</li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    <!-- ================= FORM ================= -->
 
-    <!-- SECTION 3: Rating Scale (1-4) -->
-    <div class="info-section">
-        <div class="info-title">
-            <span>📊</span> Rating Scale (1-4)
-        </div>
-        <div class="rating-scale">
-            <div class="rating-item rating-4">
-                <strong>🌟 4 - Excellent</strong>
-                <p class="rating-desc">Star user, exemplary digital habits. Significantly reduces screen time.</p>
-            </div>
-            <div class="rating-item rating-3">
-                <strong>👍 3 - Good</strong>
-                <p class="rating-desc">Positive impact, consistent usage, room for improvement.</p>
-            </div>
-            <div class="rating-item rating-2">
-                <strong>⚠️ 2 - Regular</strong>
-                <p class="rating-desc">Inconsistent results, occasional user, needs more commitment.</p>
-            </div>
-            <div class="rating-item rating-1">
-                <strong>💪 1 - Needs Improvement</strong>
-                <p class="rating-desc">Low engagement, not taking full advantage of FocusPet.</p>
-            </div>
-        </div>
-    </div>
+    <form method="POST" action="/randomforest">
 
-    <!-- SECTION 4: Input Variables (Features) -->
-    <div class="info-section">
-        <div class="info-title">
-            <span>📋</span> Input Variables (8 Features)
-        </div>
-        <p class="info-text">
-            The Random Forest model analyzes these 8 variables to predict the user's rating:
-        </p>
-        <div class="info-grid">
-            <div class="info-card">
-                <h4>📊 Age</h4>
-                <p>User's age in years. Helps understand generational behavior patterns and digital habits.</p>
-                <span class="range">Range: 0-100 years</span>
-            </div>
-            <div class="info-card">
-                <h4>📱 Screen Hours (PRE)</h4>
-                <p>Daily screen time BEFORE using FocusPet. Baseline measurement.</p>
-                <span class="range">Range: 0-24 hours</span>
-            </div>
-            <div class="info-card">
-                <h4>📱✨ Screen Hours (POST)</h4>
-                <p>Daily screen time AFTER using FocusPet. Lower values indicate success.</p>
-                <span class="range">Range: 0-24 hours</span>
-            </div>
-            <div class="info-card">
-                <h4>✅ Successful Sessions</h4>
-                <p>Number of successfully completed FocusPet sessions. Higher is better.</p>
-                <span class="range">Minimum: 0</span>
-            </div>
-            <div class="info-card">
-                <h4>❌ Failed Sessions</h4>
-                <p>Number of abandoned or failed sessions. Lower is better.</p>
-                <span class="range">Minimum: 0</span>
-            </div>
-            <div class="info-card">
-                <h4>🎮 Interactions with Rangel</h4>
-                <p>Total interactions with the virtual pet Rangel. Shows engagement level.</p>
-                <span class="range">Minimum: 0</span>
-            </div>
-            <div class="info-card">
-                <h4>🧠 Trivias Won</h4>
-                <p>Number of educational trivia games won. Indicates learning engagement.</p>
-                <span class="range">Minimum: 0</span>
-            </div>
-            <div class="info-card">
-                <h4>🎁 Rewards Redeemed</h4>
-                <p>Number of rewards claimed in the store. Shows motivation.</p>
-                <span class="range">Minimum: 0</span>
-            </div>
-        </div>
-    </div>
+        <input type="number"
+               name="edad"
+               placeholder="Age"
+               required>
 
-    <!-- SECTION 5: Feature Importance (Dynamic) - CORREGIDO -->
-    {% if feature_importance %}
-    <div class="info-section">
-        <div class="info-title">
-            <span>📊</span> Feature Importance
-        </div>
-        <p class="info-text">
-            These percentages show which variables most influence the model's predictions:
-        </div>
-        <div class="feature-importance">
-            {% for feature, importance in feature_importance %}
-            <div class="feature-bar">
-                <div class="feature-name">{{ feature }}</div>
-                <div class="bar-container">
-                    <div class="bar-fill" style="width: {{ (importance | float) * 100 }}%;"></div>
-                </div>
-                <div class="feature-percent">{{ "%.1f"|format((importance | float) * 100) }}%</div>
+        <input type="number"
+               step="0.1"
+               name="horas_pantalla_pre"
+               placeholder="Screen Time Before"
+               required>
+
+        <input type="number"
+               step="0.1"
+               name="horas_pantalla_post"
+               placeholder="Screen Time After"
+               required>
+
+        <input type="number"
+               name="sesiones_exitosas"
+               placeholder="Successful Sessions"
+               required>
+
+        <input type="number"
+               name="sesiones_fallidas"
+               placeholder="Failed Sessions"
+               required>
+
+        <input type="number"
+               name="interacciones_rangel"
+               placeholder="Rangel Interactions"
+               required>
+
+        <input type="number"
+               name="trivias_ganadas"
+               placeholder="Trivias Won"
+               required>
+
+        <input type="number"
+               name="recompensas_canjeadas"
+               placeholder="Rewards Redeemed"
+               required>
+
+        <button type="submit">
+            Predict User Adaptation
+        </button>
+
+    </form>
+
+    <!-- ================= RESULT ================= -->
+
+    {% if resultado %}
+
+        {% if resultado.error %}
+
+            <div class="result-section">
+
+                <h2>Error</h2>
+
+                <p>{{ resultado.error }}</p>
+
             </div>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
 
-    <!-- SECTION 6: Prediction Form -->
-    <div class="info-section">
-        <div class="info-title">
-            <span>🔮</span> Make a Prediction
-        </div>
-        <p class="form-instruction">Enter user data to get a personalized rating prediction from the Random Forest model:</p>
+        {% else %}
 
-        <form action="/decisiontree" method="POST">
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>📊 Age</label>
-                    <input type="number" name="edad" placeholder="Ex: 25" required min="0" max="100">
+            <div class="result-section">
+
+                <h2>{{ resultado.title }}</h2>
+
+                <p>{{ resultado.description }}</p>
+
+                <div class="motivation">
+                    {{ resultado.motivation }}
                 </div>
 
-                <div class="input-group">
-                    <label>📱 Screen hours (BEFORE FocusPet)</label>
-                    <input type="number" step="0.1" name="horas_pantalla_pre" placeholder="Ex: 5.5" required min="0" max="24">
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+
+                        <h3>Prediction</h3>
+
+                        <p>{{ resultado.prediction }}/4</p>
+
+                    </div>
+
+                    <div class="stat-card">
+
+                        <h3>Accuracy</h3>
+
+                        <p>
+                            {{ (resultado.accuracy * 100)|round(2) }}%
+                        </p>
+
+                    </div>
+
+                    <div class="stat-card">
+
+                        <h3>Model</h3>
+
+                        <p>Random Forest</p>
+
+                    </div>
+
                 </div>
 
-                <div class="input-group">
-                    <label>📱✨ Screen hours (AFTER FocusPet)</label>
-                    <input type="number" step="0.1" name="horas_pantalla_post" placeholder="Ex: 3.2" required min="0" max="24">
-                </div>
-
-                <div class="input-group">
-                    <label>✅ Successful sessions</label>
-                    <input type="number" name="sesiones_exitosas" placeholder="Ex: 15" required min="0">
-                </div>
-
-                <div class="input-group">
-                    <label>❌ Failed sessions</label>
-                    <input type="number" name="sesiones_fallidas" placeholder="Ex: 3" required min="0">
-                </div>
-
-                <div class="input-group">
-                    <label>🎮 Interactions with Rangel</label>
-                    <input type="number" name="interacciones_rangel" placeholder="Ex: 42" required min="0">
-                </div>
-
-                <div class="input-group">
-                    <label>🧠 Trivias won</label>
-                    <input type="number" name="trivias_ganadas" placeholder="Ex: 8" required min="0">
-                </div>
-
-                <div class="input-group">
-                    <label>🎁 Rewards redeemed</label>
-                    <input type="number" name="recompensas_canjeadas" placeholder="Ex: 5" required min="0">
-                </div>
             </div>
 
-            <button type="submit" class="btn-submit">
-                🌲 Analyze with Random Forest
-            </button>
-        </form>
-    </div>
-
-    <!-- SECTION 7: Model Performance -->
-    {% if accuracy %}
-    <div class="info-section">
-        <div class="info-title">
-            <span>📈</span> Model Performance
-        </div>
-        <div class="model-stats">
-            <div class="stat">
-                <div class="stat-value">{{ "%.1f"|format((accuracy | float) * 100) }}%</div>
-                <div class="stat-label">Accuracy</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">100</div>
-                <div class="stat-label">Trees</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">Bagging</div>
-                <div class="stat-label">Ensemble Method</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">Gini</div>
-                <div class="stat-label">Criterion</div>
-            </div>
-        </div>
-        <p class="info-text" style="margin-top: 15px; text-align: center;">
-            <strong>85-92% accuracy</strong> means the model correctly predicts the rating 8-9 out of 10 times.
-        </p>
-    </div>
-    {% endif %}
-
-    <!-- SECTION 8: Prediction Confidence (Dynamic) - CORREGIDO -->
-    {% if prediction and probabilidades %}
-    <div class="info-section">
-        <div class="info-title">
-            <span>🎯</span> Prediction Confidence
-        </div>
-        <p class="info-text">
-            The Random Forest model's confidence distribution across all possible ratings:
-        </p>
-        <div class="confidence-bars">
-            <div class="confidence-item">
-                <span>🌟 Excellent (4)</span>
-                <div class="bar-container">
-                    <div class="bar-fill confidence-4" style="width: {{ (probabilidades[3] | float * 100) if probabilidades|length > 3 else 0 }}%;"></div>
-                </div>
-                <span>{{ "%.1f"|format((probabilidades[3] | float * 100) if probabilidades|length > 3 else 0) }}%</span>
-            </div>
-            <div class="confidence-item">
-                <span>👍 Good (3)</span>
-                <div class="bar-container">
-                    <div class="bar-fill confidence-3" style="width: {{ (probabilidades[2] | float * 100) if probabilidades|length > 2 else 0 }}%;"></div>
-                </div>
-                <span>{{ "%.1f"|format((probabilidades[2] | float * 100) if probabilidades|length > 2 else 0) }}%</span>
-            </div>
-            <div class="confidence-item">
-                <span>⚠️ Regular (2)</span>
-                <div class="bar-container">
-                    <div class="bar-fill confidence-2" style="width: {{ (probabilidades[1] | float * 100) if probabilidades|length > 1 else 0 }}%;"></div>
-                </div>
-                <span>{{ "%.1f"|format((probabilidades[1] | float * 100) if probabilidades|length > 1 else 0) }}%</span>
-            </div>
-            <div class="confidence-item">
-                <span>💪 Needs Improvement (1)</span>
-                <div class="bar-container">
-                    <div class="bar-fill confidence-1" style="width: {{ (probabilidades[0] | float * 100) if probabilidades|length > 0 else 0 }}%;"></div>
-                </div>
-                <span>{{ "%.1f"|format((probabilidades[0] | float * 100) if probabilidades|length > 0 else 0) }}%</span>
-            </div>
-        </div>
-        {% if prediction and probabilidades %}
-        <p class="info-text" style="margin-top: 15px; font-size: 0.85rem; text-align: center;">
-            The model is {{ "%.1f"|format((probabilidades[prediction-1] | float * 100) if probabilidades|length >= prediction else 0) }}% confident in its prediction.
-        </p>
         {% endif %}
-    </div>
+
     {% endif %}
 
-    <!-- SECTION 9: Results -->
-    {% if error %}
-    <div class="error-box">
-        ❌ {{ error }}
-    </div>
-    {% endif %}
-
-    {% if prediction %}
-    <div class="result-section">
-        <div class="result-badge 
-            {% if title == 'Excellent' %}badge-excellent
-            {% elif title == 'Good' %}badge-good
-            {% elif title == 'Regular' %}badge-regular
-            {% else %}badge-needs-improvement{% endif %}">
-            {% if title == 'Excellent' %}🌟{% elif title == 'Good' %}👍{% elif title == 'Regular' %}⚠️{% else %}💪{% endif %}
-            {{ title }} ({{ prediction }}/4)
-        </div>
-
-        <div class="result-description">
-            <strong>📋 Analysis:</strong><br>
-            {{ description }}
-        </div>
-
-        <div class="motivation-box">
-            <strong>💡 Motivational message:</strong><br>
-            {{ motivation }}
-        </div>
-
-        <div class="accuracy-info">
-            🌲 Prediction generated by Random Forest Classifier (100 decision trees) | Model accuracy: {{ "%.1f"|format((accuracy | float) * 100) if accuracy else 'N/A' }}%
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- Back to home -->
-    <div class="back-home">
-        <a href="/" class="back-button">← Back to home</a>
-    </div>
 </div>
 
 </body>
