@@ -1,4 +1,6 @@
-from flask import Flask, render_template
+from pyexpat import model
+
+from flask import Flask, render_template, request
 import pandas as pd
 import os
 
@@ -18,3 +20,32 @@ def dataset_explicacion():
     df = pd.read_csv(csv_path)
     records = df.to_dict(orient='records')
     return render_template('dataset.html', dataset=records)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/predecir', methods=['POST'])
+def predecir():
+
+    datos = [[
+        int(request.form['edad']),
+        float(request.form['horas_pantalla_pre']),
+        float(request.form['horas_pantalla_post']),
+        int(request.form['sesiones_exitosas']),
+        int(request.form['sesiones_fallidas']),
+        int(request.form['interacciones_rangel']),
+        int(request.form['trivias_ganadas']),
+        int(request.form['recompensas_canjeadas'])
+    ]]
+
+    resultado = model.predict(datos)
+
+    return render_template(
+        'index.html',
+        prediccion=resultado[0]
+    )
+
+if __name__ == '__main__':
+    app.run(debug=True)
+    
