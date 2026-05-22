@@ -21,6 +21,118 @@
         <a href="/dataset" class="nav-btn"> Dataset</a>
     </div>
 
+<!-- SECTION 1: What is this model? -->
+    <div class="info-section">
+        <div class="info-title">
+            <span></span> About the Prediction Model
+        </div>
+        <p class="info-text">
+            This model uses a <strong>Decision Tree algorithm</strong> (Scikit-learn) to predict a user's rating in FocusPet based on their digital behavior. 
+            The model was trained with real user data and achieves high accuracy in classifying users into four rating levels.
+        </p>
+        <div class="model-stats">
+            <div class="stat">
+                <div class="stat-value"> Decision Tree</div>
+                <div class="stat-label">Algorithm</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">Gini</div>
+                <div class="stat-label">Criterion</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">Max Depth: 5</div>
+                <div class="stat-label">Tree Depth</div>
+            </div>
+            {% if accuracy %}
+            <div class="stat">
+                <div class="stat-value">{{ "%.1f"|format(accuracy*100) }}%</div>
+                <div class="stat-label">Model Accuracy</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- SECTION 2: Rating Scale -->
+    <div class="info-section">
+        <div class="info-title">
+            <span></span> Rating Scale (1-4)
+        </div>
+        <div class="rating-scale">
+            <div class="rating-item rating-4">
+                <strong> 4 - Excellent</strong>
+                <p class="rating-desc">Star user, exemplary digital habits</p>
+            </div>
+            <div class="rating-item rating-3">
+                <strong> 3 - Good</strong>
+                <p class="rating-desc">Positive impact, room for improvement</p>
+            </div>
+            <div class="rating-item rating-2">
+                <strong> 2 - Regular</strong>
+                <p class="rating-desc">Inconsistent results, needs commitment</p>
+            </div>
+            <div class="rating-item rating-1">
+                <strong> 1 - Needs Improvement</strong>
+                <p class="rating-desc">Not taking full advantage of FocusPet</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 3: Variables used -->
+    <div class="info-section">
+        <div class="info-title">
+            <span></span> Input Variables (Features)
+        </div>
+        <div class="info-grid">
+            <div class="info-card">
+                <h4> Age</h4>
+                <p>User's age in years. Helps understand generational behavior patterns.</p>
+                <span class="range">Range: 0-100 years</span>
+            </div>
+            <div class="info-card">
+                <h4> Screen Hours (PRE)</h4>
+                <p>Daily screen time BEFORE using FocusPet.</p>
+                <span class="range">Range: 0-24 hours</span>
+            </div>
+            <div class="info-card">
+                <h4> Screen Hours (POST)</h4>
+                <p>Daily screen time AFTER using FocusPet. Lower values indicate success.</p>
+                <span class="range">Range: 0-24 hours</span>
+            </div>
+            <div class="info-card">
+                <h4>Successful Sessions</h4>
+                <p>Number of successfully completed FocusPet sessions.</p>
+                <span class="range">Minimum: 0</span>
+            </div>
+            <div class="info-card">
+                <h4> Failed Sessions</h4>
+                <p>Number of abandoned or failed sessions.</p>
+                <span class="range">Minimum: 0</span>
+            </div>
+            <div class="info-card">
+                <h4> Interactions with Rangel</h4>
+                <p>Total interactions with the virtual pet Rangel.</p>
+                <span class="range">Minimum: 0</span>
+            </div>
+            <div class="info-card">
+                <h4> Trivias Won</h4>
+                <p>Number of educational trivia games won.</p>
+                <span class="range">Minimum: 0</span>
+            </div>
+            <div class="info-card">
+                <h4> Rewards Redeemed</h4>
+                <p>Number of rewards claimed in the store.</p>
+                <span class="range">Minimum: 0</span>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
     <form action="/decisiontree" method="POST">
         <div class="form-grid">
             <div class="input-group">
