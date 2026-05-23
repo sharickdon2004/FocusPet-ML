@@ -5,73 +5,129 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FocusPet - Productivity Assistant</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+
 </head>
 <body>
 
 <div class="container">
 
     <div class="RangelMenu">
-        
-        <div class="pet" id="pet">
+        <div class="pet" id="slothPet">
             <img src="{{ url_for('static', filename='resources/rangel.png') }}" alt="pet">
         </div>
+        <div class="menu-label">MENU</div>
     </div>
 
     <div class="title">FocusPet</div>
 
+   <div class="container-panels">
     <div class="panel">
-        
+        <div class="fact-box">
+            <div class="fact-quote">
+                "Procrastination is not laziness, it's an emotional regulation problem. We avoid negative feelings, not the task itself."
+            </div>
+            <div class="fact-author">
+                — Dr. Fuschia Sirois, University of Sheffield
+            </div>
+        </div>
         <a href="problematic">
             <div class="button">OUR PROBLEMATIC</div>
         </a>
-        <a href="dataset">
-             <div class="button">OUR DATA</div>
-        </a>
-
-        <a href="/decisiontree">
-    <div class="button">DECISION TREE</div>
-        </a>
-
-        <a href="/randomforest">
-             
-    <div class="button">RANDOM FOREST</div>
-        </a>
-
-
     </div>
 
     <div class="phone-box">
         <video src="{{ url_for('static', filename='resources/presentacion.mp4') }}" autoplay muted loop></video>
     </div>
 </div>
-       
-<!-- Team -->
-    <div class="team-container">
-        <h3 class="team-title">Team Members</h3>
 
-        <div class="team-grid">
-            <div class="team-member">
-                <img src="{{ url_for('static', filename='resources/juan.jpeg') }}" alt="Juan ">
-                <p>Juan David Vargas</p>
-            </div>
-            
-
-            <div class="team-member">
-                <img src="{{ url_for('static', filename='resources/camilo.jpeg') }}" alt="Camilo Andrés Sichaca">
-                <p>Camilo Andrés Sichaca</p>
-            </div>
-
-            <div class="team-member">
-                <img src="{{ url_for('static', filename='resources/sharick.jpeg') }}" alt="Sharick Lorena Doncel">
-                <p>Sharick Lorena Doncel</p>
-            </div>
-
-            <div class="team-member">
-                <img src="{{ url_for('static', filename='resources/santiago.jpeg') }}" alt="Santiago José Morales">
-                <p>Santiago José Morales</p>
-            </div>
+<!-- Team Section -->
+<div class="team-container">
+    <h3 class="team-title">Team Members</h3>
+    <div class="team-grid">
+        <div class="team-member">
+            <img src="{{ url_for('static', filename='resources/juan.jpeg') }}" alt="Juan David Vargas">
+            <p>Juan David Vargas</p>
+        </div>
+        <div class="team-member">
+            <img src="{{ url_for('static', filename='resources/camilo.jpeg') }}" alt="Camilo Andrés Sichaca">
+            <p>Camilo Andrés Sichaca</p>
+        </div>
+        <div class="team-member">
+            <img src="{{ url_for('static', filename='resources/sharick.jpeg') }}" alt="Sharick Lorena Doncel">
+            <p>Sharick Lorena Doncel</p>
+        </div>
+        <div class="team-member">
+            <img src="{{ url_for('static', filename='resources/santiago.jpeg') }}" alt="Santiago José Morales">
+            <p>Santiago José Morales</p>
         </div>
     </div>
+</div>
+
+<div class="side-menu" id="sideMenu">
+    <h3>PHASE 1</h3>
+    <ul>
+        <li><a href="#" class="phase1-link" data-page="business-logic">BUSINESS LOGIC</a></li>
+        <li><a href="#" class="phase1-link" data-page="data-analysis">DATA ANALYSIS</a></li>
+        <li><a href="#" class="phase1-link" data-page="engineering">ENGINERING</a></li>
+    </ul>
+    <h3>PHASE 2</h3>
+    <ul>
+        <li><a href="#" class="phase1-link" data-page="business-logic">CONCEPS</a></li>
+        <li><a href="#" class="phase1-link" data-page="data-analysis">SMART TRAFFIC AGENT</a></li>
+        
+    </ul>
+    <h3>PHASE 3-4 </h3>
+    <ul>
+        <li><a href="#" class="phase1-link" data-page="business-logic">MODEL 1</a></li>
+        <li><a href="#" class="phase1-link" data-page="data-analysis">MODEL 2</a></li>
+        <li><a href="#" class="phase1-link" data-page="engineering">MODEL 3</a></li>
+    </ul>
+    <h3>PHASE 5</h3>
+    <ul>
+        <li><a href="#" class="phase1-link" data-page="business-logic">PREDICTION SYSTEM</a></li>
+        
+    </ul>
+    <h3>PHASE 6</h3>
+    <ul>
+        <li><a href="#" class="phase1-link" data-page="business-logic">VIDEO</a></li>
+    
+    </ul>
+    
+</div>
+<div class="overlay" id="overlay"></div>
+
+<script>
+    const slothPet = document.getElementById('slothPet');
+    const sideMenu = document.getElementById('sideMenu');
+    const overlay = document.getElementById('overlay');
+    const redirectBtn = document.getElementById('redirectPhase1Btn');
+    const phaseLinks = document.querySelectorAll('.phase1-link');
+
+    function openMenu() {
+        sideMenu.classList.add('open');
+        overlay.classList.add('active');
+    }
+
+    function closeMenu() {
+        sideMenu.classList.remove('open');
+        overlay.classList.remove('active');
+    }
+
+    slothPet.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (sideMenu.classList.contains('open')) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+
+    overlay.addEventListener('click', closeMenu);
+
+    sideMenu.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+</script>
 
 </body>
 </html>
