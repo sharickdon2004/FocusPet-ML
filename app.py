@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import pandas as pd
 import os
+import joblib
 from decisiontree import model
 from randomforest import model as randomforest_model
 
@@ -83,6 +84,37 @@ def randomforest():
 
     return render_template("randomforest.html", resultado=resultado)
 
+
+@app.route("/linearregression", methods=["GET", "POST"])
+def linearregression():
+    prediction = None
+    error = None
+
+    if request.method == "POST":
+        try:
+            datos = [
+                float(request.form["age"]),
+                float(request.form["screen_time_pre"]),
+                float(request.form["screen_time_post"]),
+                float(request.form["successful_sessions"]),
+                float(request.form["failed_sessions"]),
+                float(request.form["rangel_interactions"]),
+                float(request.form["trivias_won"]),
+                float(request.form["rewards_redeemed"]),
+            ]
+
+            model_path = os.path.join(os.path.dirname(__file__), "linear_regression_model.pkl")
+            lr_model = joblib.load(model_path)         
+            pred = lr_model.predict([datos])[0]
+            prediction = round(max(1.0, min(5.0, pred)), 2)
+
+            print(f"Predicción de Regresión Lineal exitosa: {prediction}")
+
+        except Exception as e:
+            error = f"Error en la predicción: {str(e)}"
+            print(error)
+
+    return render_template("regression.html", prediction=prediction, error=error)
 
 if __name__ == "__main__":
     app.run(debug=True)

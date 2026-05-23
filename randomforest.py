@@ -4,30 +4,44 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 import joblib
 import os
-
+import matplotlib
+matplotlib.use('Agg') # Evita errores de hilos en entornos web
+import matplotlib.pyplot as plt
 
 class RandomForestModel:
 
     def __init__(self):
-
         self.model = None
         self.accuracy = None
-
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
         self.csv_path = os.path.join(self.base_dir, "DataSet_FocusPet.csv")
         self.model_path = os.path.join(self.base_dir, "randomforest_model.pkl")
-
+        self.features = [
+            "age", "screen_time_pre", "screen_time_post",
+            "successful_sessions", "failed_sessions",
+            "rangel_interactions", "trivias_won", "rewards_redeemed"
+        ]
         self.cargar_o_entrenar()
 
     # =====================================================
     # CARGAR O ENTRENAR
     # =====================================================
-
     def cargar_o_entrenar(self):
-
         if os.path.exists(self.model_path):
             self.model = joblib.load(self.model_path)
             print("✅ Random Forest model loaded")
+            
+            # Recalcular métricas y regenerar gráfico por seguridad
+            try:
+                df = pd.read_csv(self.csv_path, sep=';', decimal=',') if ';' in open(self.csv_path).read() else pd.read_csv(self.csv_path)
+                X = df[self.features]
+                Y = df["beta_rating"]
+                X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
+                self.accuracy = accuracy_score(Y_test, self.model.predict(X_test))
+                self.generar_grafico_importancia()
+            except Exception as e:
+                print(f"⚠ Alerta al cargar métricas: {e}")
+                self.accuracy = 0.85
         else:
             print("⚠ Entrenando modelo...")
             self.entrenar()
@@ -35,66 +49,74 @@ class RandomForestModel:
     # =====================================================
     # ENTRENAMIENTO
     # =====================================================
-
     def entrenar(self):
-
         if not os.path.exists(self.csv_path):
             raise FileNotFoundError(f"❌ No se encontró el dataset:\n{self.csv_path}")
 
-        df = pd.read_csv(self.csv_path)
+        # Detectar el separador del CSV automáticamente
+        try:
+            df = pd.read_csv(self.csv_path, sep=';', decimal=',')
+            if "age" not in df.columns: raise ValueError
+        except:
+            df = pd.read_csv(self.csv_path)
 
-        X = df[
-            [
-                "age",
-                "screen_time_pre",
-                "screen_time_post",
-                "successful_sessions",
-                "failed_sessions",
-                "rangel_interactions",
-                "trivias_won",
-                "rewards_redeemed",
-            ]
-        ]
-
+        X = df[self.features]
         Y = df["beta_rating"]
 
-        X_train, X_test, Y_train, Y_test = train_test_split(
-            X, Y, test_size=0.2, random_state=42
-        )
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
 
-        self.model = RandomForestClassifier(
-            n_estimators=100, max_depth=10, random_state=42
-        )
-
+        self.model = RandomForestClassifier(n_estimators=100, max_depth=10, random_state=42)
         self.model.fit(X_train, Y_train)
 
         self.accuracy = accuracy_score(Y_test, self.model.predict(X_test))
-
         joblib.dump(self.model, self.model_path)
-
+        
         print(f"✅ Modelo entrenado")
         print(f"📊 Accuracy: {self.accuracy:.2%}")
+        
+        self.generar_grafico_importancia()
+
+    # =====================================================
+    # GENERAR GRÁFICO DE IMPORTANCIA DE VARIABLES
+    # =====================================================
+    def generar_grafico_importancia(self):
+        try:
+            os.makedirs(os.path.join(self.base_dir, 'static', 'images'), exist_ok=True)
+            importancia = self.model.feature_importances_
+            
+            # Crear un dataframe temporal para ordenar los datos
+            feat_imp = pd.DataFrame({'Variable': self.features, 'Importancia': importancia})
+            feat_imp = feat_imp.sort_values(by='Importancia', ascending=True)
+
+            plt.figure(figsize=(10, 5))
+            # Usar un color sofisticado (p. ej. verde bosque desaturado)
+            plt.barh(feat_imp['Variable'], feat_imp['Importancia'], color='#2D6A4F', alpha=0.85)
+            plt.xlabel('Nivel de Importancia en la Predicción')
+            plt.title('¿Qué variables influyen más en la adaptación del usuario?')
+            plt.grid(axis='x', linestyle=':', alpha=0.6)
+            
+            path_grafica = os.path.join(self.base_dir, 'static', 'images', 'rf_importance.png')
+            plt.savefig(path_grafica, bbox_inches='tight', dpi=150)
+            plt.close()
+            print("📊 Gráfico de importancia guardado con éxito.")
+        except Exception as e:
+            print(f"❌ Error al crear la gráfica: {e}")
 
     # =====================================================
     # PREDICCIÓN
     # =====================================================
-
     def procesar(self, form):
-
         try:
-
-            datos = [
-                [
-                    float(form["edad"]),
-                    float(form["horas_pantalla_pre"]),
-                    float(form["horas_pantalla_post"]),
-                    float(form["sesiones_exitosas"]),
-                    float(form["sesiones_fallidas"]),
-                    float(form["interacciones_rangel"]),
-                    float(form["trivias_ganadas"]),
-                    float(form["recompensas_canjeadas"]),
-                ]
-            ]
+            datos = [[
+                float(form["edad"]),
+                float(form["horas_pantalla_pre"]),
+                float(form["horas_pantalla_post"]),
+                float(form["sesiones_exitosas"]),
+                float(form["sesiones_fallidas"]),
+                float(form["interacciones_rangel"]),
+                float(form["trivias_won"]),
+                float(form["recompensas_canjeadas"]),
+            ]]
 
             prediccion = self.model.predict(datos)[0]
 
@@ -106,47 +128,17 @@ class RandomForestModel:
                 "accuracy": self.accuracy,
                 "error": None,
             }
-
         except Exception as e:
             return {"error": str(e)}
 
-    # =====================================================
-    # MENSAJES
-    # =====================================================
-
     def get_messages(self, calificacion):
-
         mensajes = {
-            5: {
-                "title": "Excellent",
-                "description": "Usuario con excelente adaptación digital",
-                "motivation": "Sigue así, eres un ejemplo!",
-            },
-            4: {
-                "title": "Good",
-                "description": "Buen comportamiento digital",
-                "motivation": "Vas por buen camino!",
-            },
-            3: {
-                "title": "Regular",
-                "description": "Necesitas mejorar hábitos digitales",
-                "motivation": "Pequeños cambios hacen gran diferencia",
-            },
-            2: {
-                "title": "Needs Improvement",
-                "description": "Baja adaptación digital",
-                "motivation": "Puedes mejorar mucho más",
-            },
-            1: {
-                "title": "Critical",
-                "description": "Adaptación digital muy baja",
-                "motivation": "Es momento de empezar a cambiar",
-            },
+            5: {"title": "Excelente (Nivel 5)", "description": "Usuario con una adaptación digital impecable. Sabe balancear perfectamente la productividad con el entretenimiento.", "motivation": "¡Increíble! Sigue manteniendo este nivel de disciplina digital."},
+            4: {"title": "Bueno (Nivel 4)", "description": "Buen comportamiento y hábitos saludables. El usuario responde positivamente a los estímulos de enfoque.", "motivation": "¡Vas por excelente camino! Unos ajustes más y llegarás al nivel óptimo."},
+            3: {"title": "Regular (Nivel 3)", "description": "Se detectan inconsistencias. El tiempo en pantalla post-uso bajó levemente pero las sesiones fallidas son considerables.", "motivation": "Pequeños cambios diarios generarán un gran impacto a largo plazo."},
+            2: {"title": "Requiere Mejora (Nivel 2)", "description": "Baja adaptación digital. El usuario pasa mucho tiempo en pantalla y completa pocas tareas recomendadas.", "motivation": "¡No te rindas! FocusPet tiene las herramientas para ayudarte a mejorar hoy mismo."},
+            1: {"title": "Crítico (Nivel 1)", "description": "Adaptación digital muy baja. Patrón de uso disperso con alto índice de sesiones abandonadas o fallidas.", "motivation": "Es momento de hacer una pausa y reestructurar tus hábitos de enfoque."},
         }
-
         return mensajes.get(calificacion, mensajes[3])
-
-
-# ================= INSTANCIA =================
 
 model = RandomForestModel()

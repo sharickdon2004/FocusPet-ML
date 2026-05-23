@@ -5,23 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FocusPet - Decision Tree | Prediction</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
-    
+    <style>
+        .graph-container { text-align: center; margin: 30px 0; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .graph-container img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #eaeaea; }
+    </style>
 </head>
 <body>
 
-<!-- Main Decision Tree Content (no index duplicates) -->
 <div class="decisiontree-container">
-    <h1 class="decisiontree-title"> Decision Tree</h1>
+    <h1 class="decisiontree-title">🌳 Decision Tree</h1>
     <p class="decisiontree-subtitle">Enter user data to predict their FocusPet rating</p>
 
-    <!-- Navigation buttons -->
     <div class="nav-buttons">
         <a href="/" class="nav-btn">Home</a>
-        <a href="/problematic" class="nav-btn"> Problematic</a>
-        <a href="/dataset" class="nav-btn"> Dataset</a>
+        <a href="/problematic" class="nav-btn">Problematic</a>
+        <a href="/dataset" class="nav-btn">Dataset</a>
     </div>
 
-<!-- SECTION 1: What is this model? -->
     <div class="info-section">
         <div class="info-title">
             <span></span> About the Prediction Model
@@ -32,7 +32,7 @@
         </p>
         <div class="model-stats">
             <div class="stat">
-                <div class="stat-value"> Decision Tree</div>
+                <div class="stat-value">Decision Tree</div>
                 <div class="stat-label">Algorithm</div>
             </div>
             <div class="stat">
@@ -43,141 +43,140 @@
                 <div class="stat-value">Max Depth: 5</div>
                 <div class="stat-label">Tree Depth</div>
             </div>
-            {% if accuracy %}
             <div class="stat">
-                <div class="stat-value">{{ "%.1f"|format(accuracy*100) }}%</div>
+                <div class="stat-value">
+                    {% if accuracy %}
+                        {{ "%.1f"|format(accuracy*100) }}%
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </div>
                 <div class="stat-label">Model Accuracy</div>
             </div>
-            {% endif %}
         </div>
     </div>
 
-    <!-- SECTION 2: Rating Scale -->
+    <div class="info-section">
+        <div class="info-title">
+            <span></span> Model Insights & Decision Weights
+        </div>
+        <p class="info-text">
+            The chart below shows how the Decision Tree algorithm prioritizes different features when classifying a user. Features with higher bars are the most critical factors considered by the artificial intelligence to assign the final rating.
+        </p>
+        <div class="graph-container">
+            <img src="{{ url_for('static', filename='images/dt_importance.png') }}" alt="Decision Tree Feature Importance">
+        </div>
+    </div>
+
     <div class="info-section">
         <div class="info-title">
             <span></span> Rating Scale (1-4)
         </div>
         <div class="rating-scale">
             <div class="rating-item rating-4">
-                <strong> 4 - Excellent</strong>
+                <strong>⭐ 4 - Excellent</strong>
                 <p class="rating-desc">Star user, exemplary digital habits</p>
             </div>
             <div class="rating-item rating-3">
-                <strong> 3 - Good</strong>
+                <strong>⭐ 3 - Good</strong>
                 <p class="rating-desc">Positive impact, room for improvement</p>
             </div>
             <div class="rating-item rating-2">
-                <strong> 2 - Regular</strong>
+                <strong>⭐ 2 - Regular</strong>
                 <p class="rating-desc">Inconsistent results, needs commitment</p>
             </div>
             <div class="rating-item rating-1">
-                <strong> 1 - Needs Improvement</strong>
+                <strong>⭐ 1 - Needs Improvement</strong>
                 <p class="rating-desc">Not taking full advantage of FocusPet</p>
             </div>
         </div>
     </div>
 
-    <!-- SECTION 3: Variables used -->
     <div class="info-section">
         <div class="info-title">
             <span></span> Input Variables (Features)
         </div>
         <div class="info-grid">
             <div class="info-card">
-                <h4> Age</h4>
+                <h4>👤 Age</h4>
                 <p>User's age in years. Helps understand generational behavior patterns.</p>
                 <span class="range">Range: 0-100 years</span>
             </div>
             <div class="info-card">
-                <h4> Screen Hours (PRE)</h4>
+                <h4>📱 Screen Hours (PRE)</h4>
                 <p>Daily screen time BEFORE using FocusPet.</p>
                 <span class="range">Range: 0-24 hours</span>
             </div>
             <div class="info-card">
-                <h4> Screen Hours (POST)</h4>
+                <h4>📉 Screen Hours (POST)</h4>
                 <p>Daily screen time AFTER using FocusPet. Lower values indicate success.</p>
                 <span class="range">Range: 0-24 hours</span>
             </div>
             <div class="info-card">
-                <h4>Successful Sessions</h4>
+                <h4>✅ Successful Sessions</h4>
                 <p>Number of successfully completed FocusPet sessions.</p>
                 <span class="range">Minimum: 0</span>
             </div>
             <div class="info-card">
-                <h4> Failed Sessions</h4>
+                <h4>❌ Failed Sessions</h4>
                 <p>Number of abandoned or failed sessions.</p>
                 <span class="range">Minimum: 0</span>
             </div>
             <div class="info-card">
-                <h4> Interactions with Rangel</h4>
+                <h4>🐶 Interactions with Rangel</h4>
                 <p>Total interactions with the virtual pet Rangel.</p>
                 <span class="range">Minimum: 0</span>
             </div>
             <div class="info-card">
-                <h4> Trivias Won</h4>
+                <h4>🏆 Trivias Won</h4>
                 <p>Number of educational trivia games won.</p>
                 <span class="range">Minimum: 0</span>
             </div>
             <div class="info-card">
-                <h4> Rewards Redeemed</h4>
+                <h4>🎁 Rewards Redeemed</h4>
                 <p>Number of rewards claimed in the store.</p>
                 <span class="range">Minimum: 0</span>
             </div>
         </div>
     </div>
 
-
-
-
-
-
-
-
     <form action="/decisiontree" method="POST">
         <div class="form-grid">
             <div class="input-group">
-                <label> Age</label>
+                <label>Age</label>
                 <input type="number" name="age" placeholder="Ex: 25" required min="0" max="100">
             </div>
-
             <div class="input-group">
-                <label> Screen hours (BEFORE FocusPet)</label>
+                <label>Screen hours (BEFORE FocusPet)</label>
                 <input type="number" step="0.1" name="screen_time_pre" placeholder="Ex: 5.5" required min="0" max="24">
             </div>
-
             <div class="input-group">
-                <label> Screen hours (AFTER FocusPet)</label>
+                <label>Screen hours (AFTER FocusPet)</label>
                 <input type="number" step="0.1" name="screen_time_post" placeholder="Ex: 3.2" required min="0" max="24">
             </div>
-
             <div class="input-group">
-                <label> Successful sessions</label>
+                <label>Successful sessions</label>
                 <input type="number" name="successful_sessions" placeholder="Ex: 15" required min="0">
             </div>
-
             <div class="input-group">
-                <label> Failed sessions</label>
+                <label>Failed sessions</label>
                 <input type="number" name="failed_sessions" placeholder="Ex: 3" required min="0">
             </div>
-
             <div class="input-group">
                 <label>Interactions with Rangel</label>
                 <input type="number" name="rangel_interactions" placeholder="Ex: 42" required min="0">
             </div>
-
             <div class="input-group">
-                <label> Trivias won</label>
+                <label>Trivias won</label>
                 <input type="number" name="trivias_won" placeholder="Ex: 8" required min="0">
             </div>
-
             <div class="input-group">
-                <label> Rewards redeemed</label>
+                <label>Rewards redeemed</label>
                 <input type="number" name="rewards_redeemed" placeholder="Ex: 5" required min="0">
             </div>
         </div>
-
         <button type="submit" class="btn-submit">
-             Analyze behavior
+            Analyze behavior
         </button>
     </form>
 
@@ -194,7 +193,6 @@
             {% elif title == 'Good' %}badge-good
             {% elif title == 'Regular' %}badge-regular
             {% else %}badge-needs-improvement{% endif %}">
-            {% if title == 'Excellent' %}{% elif title == 'Good' %}{% elif title == 'Regular' %}{% else %}{% endif %}
             {{ title }}
         </div>
 
@@ -204,12 +202,12 @@
         </div>
 
         <div class="motivation-box">
-            <strong> Motivational message:</strong><br>
+            <strong>💬 Motivational message:</strong><br>
             {{ motivation }}
         </div>
 
         <div class="accuracy-info">
-             Prediction: {{ prediction }}/4 | Model: Decision Tree
+            Prediction: {{ prediction }}/4 | Model: Decision Tree
             {% if accuracy %}
             | Accuracy: {{ "%.1f"|format(accuracy*100) }}%
             {% endif %}
@@ -217,7 +215,7 @@
     </div>
     {% endif %}
 
-    <div style="text-align: center;">
+    <div style="text-align: center; margin-top: 20px;">
         <a href="/" class="back-button">← Back to home</a>
     </div>
 </div>
