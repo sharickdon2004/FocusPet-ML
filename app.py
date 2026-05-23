@@ -116,5 +116,27 @@ def linearregression():
 
     return render_template("regression.html", prediction=prediction, error=error)
 
+
+@app.route("/business-understanding")
+def business_understanding():
+    return render_template("business_understanding.html")
+
+@app.route("/data-understanding")
+def data_understanding():
+    return render_template("data_understanding.html")
+
+@app.route("/data-engineering")
+def data_engineering():
+    return render_template("data_engineering.html")
+
+@app.route("/model-engineering")
+def model_engineering():
+    return render_template("model_engineering.html")
+
+@app.route("/model-evaluation")
+def model_evaluation():
+    return render_template("model_evaluation.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Engineering - FocusPet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style> .phase-header { background: #16a085; color: white; padding: 40px 0; margin-bottom: 30px; } </style>
+</head>
+<body class="bg-light">
+
+<div class="phase-header text-center shadow-sm">
+    <h1 class="display-5 fw-bold">Phase 3: Data Engineering</h1>
+    <p class="lead">Transformations, Feature Engineering, and ML Preparation.</p>
+</div>
+
+<div class="container mb-5">
+    <div class="row g-4">
+        
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <div class="display-6 text-warning mb-2">🧹</div>
+                    <h4 class="card-title">1. Data Cleaning</h4>
+                    <p class="text-muted">The raw CSV data was imported using Pandas. We implemented dynamic delimiter detection (handling both <code>,</code> and <code>;</code> separators) and managed European decimal formats (<code>,</code> to <code>.</code>) to prevent data type errors.</p>
+                    <ul class="small">
+                        <li>Missing values check (Imputation if necessary).</li>
+                        <li>Data type casting to `float64`.</li>
+                        <li>Removal of duplicate records.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <div class="display-6 text-info mb-2">⚙️</div>
+                    <h4 class="card-title">2. Feature Engineering</h4>
+                    <p class="text-muted">To help our models understand the actual progress of the user, derived features were conceptually evaluated. The relationship between <code>screen_time_pre</code> and <code>screen_time_post</code> naturally models a "Reduction Rate".</p>
+                    <p class="text-muted small">Since our algorithms (especially Trees) handle non-linear relationships well, we kept the raw granular metrics (interactions, trivias, rewards) as direct features.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <div class="display-6 text-danger mb-2">✂️</div>
+                    <h4 class="card-title">3. Model Preparation</h4>
+                    <p class="text-muted">We segregated our independent variables (X) from the dependent variable (Y = `beta_rating`).</p>
+                    <div class="alert alert-secondary py-2 mt-3">
+                        <strong>Train/Test Split:</strong><br>
+                        80% Training Data<br>
+                        20% Testing Data<br>
+                        <em>Random State: 42 (for reproducibility)</em>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="/data-understanding" class="btn btn-outline-secondary px-4">⬅ Back</a>
+        <a href="/model-engineering" class="btn btn-primary px-4">Next: Model Engineering ➔</a>
+    </div>
+</div>
+
+</body>
+</html>
