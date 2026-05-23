@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Engineering - FocusPet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style> .phase-header { background: #8e44ad; color: white; padding: 40px 0; margin-bottom: 30px; } </style>
+</head>
+<body class="bg-light">
+
+<div class="phase-header text-center shadow-sm">
+    <h1 class="display-5 fw-bold">Phase 4: Model Engineering</h1>
+    <p class="lead">Training, Hyperparameter Tuning, and Validation of 3 ML Models.</p>
+</div>
+
+<div class="container mb-5">
+    <p class="text-center mb-5">We trained three distinct supervised learning models to determine which algorithmic approach best captures the patterns of digital addiction recovery and gamification engagement.</p>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 shadow border-0">
+                <div class="card-header bg-primary text-white fw-bold">1. Linear Regression</div>
+                <div class="card-body">
+                    <p><strong>Type:</strong> Regression</p>
+                    <p class="small text-muted">Used as our statistical baseline. It assumes a linear relationship between user behavior and the final rating. The output is a continuous number that we rounded to the nearest integer rating (1-5).</p>
+                    <hr>
+                    <h6>Hyperparameters:</h6>
+                    <ul class="small">
+                        <li><code>fit_intercept=True</code></li>
+                        <li>Standard Ordinary Least Squares (OLS)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow border-0">
+                <div class="card-header bg-warning text-dark fw-bold">2. Decision Tree</div>
+                <div class="card-body">
+                    <p><strong>Type:</strong> Classification</p>
+                    <p class="small text-muted">A non-linear model that splits the dataset based on feature thresholds (e.g., "Are successful sessions > 15?"). Highly interpretable but prone to overfitting.</p>
+                    <hr>
+                    <h6>Hyperparameter Tuning:</h6>
+                    <ul class="small">
+                        <li><code>criterion="gini"</code> (Measuring impurity)</li>
+                        <li><code>max_depth=5</code> (Restricted to prevent overfitting and memorize noise)</li>
+                        <li><code>random_state=42</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow border-0">
+                <div class="card-header bg-success text-white fw-bold">3. Random Forest</div>
+                <div class="card-body">
+                    <p><strong>Type:</strong> Ensemble Classification</p>
+                    <p class="small text-muted">Our most robust model. It builds multiple decision trees on random subsets of data and averages their votes. This significantly lowers variance and improves prediction stability.</p>
+                    <hr>
+                    <h6>Hyperparameter Tuning:</h6>
+                    <ul class="small">
+                        <li><code>n_estimators=100</code> (Assembly of 100 trees)</li>
+                        <li><code>max_depth=10</code> (Deeper allowed due to ensemble nature)</li>
+                        <li><code>random_state=42</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="/data-engineering" class="btn btn-outline-secondary px-4">⬅ Back</a>
+        <a href="/model-evaluation" class="btn btn-primary px-4">Next: Model Evaluation ➔</a>
+    </div>
+</div>
+
+</body>
+</html>

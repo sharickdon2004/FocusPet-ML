@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Evaluation - FocusPet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style> .phase-header { background: #c0392b; color: white; padding: 40px 0; margin-bottom: 30px; } </style>
+</head>
+<body class="bg-light">
+
+<div class="phase-header text-center shadow-sm">
+    <h1 class="display-5 fw-bold">Phase 5: Model Evaluation</h1>
+    <p class="lead">Comparative performance analysis, Confusion Matrices, and Final Selection.</p>
+</div>
+
+<div class="container mb-5">
+    
+    <div class="card shadow border-0 mb-5">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Performance Comparison</h3>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover text-center align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Model</th>
+                            <th>Primary Metric</th>
+                            <th>Score on Test Data</th>
+                            <th>Overfitting Risk</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Linear Regression</td>
+                            <td>R² / MSE</td>
+                            <td>Moderate (Baseline)</td>
+                            <td>Low</td>
+                            <td><span class="badge bg-secondary">Baseline</span></td>
+                        </tr>
+                        <tr>
+                            <td>Decision Tree</td>
+                            <td>Accuracy</td>
+                            <td>High</td>
+                            <td>Medium (Controlled by Depth)</td>
+                            <td><span class="badge bg-info">Alternative</span></td>
+                        </tr>
+                        <tr class="table-success fw-bold">
+                            <td>Random Forest</td>
+                            <td>Accuracy</td>
+                            <td>Highest (Optimal)</td>
+                            <td>Low (Ensemble Approach)</td>
+                            <td><span class="badge bg-success">Selected Champion</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mb-3">Confusion Matrices Analysis</h3>
+    <p class="text-muted mb-4">A confusion matrix allows us to see exactly where our classification models are making mistakes (e.g., predicting a Rating 4 when the user was actually a Rating 3).</p>
+    
+    <div class="row g-4 mb-5 text-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 p-3">
+                <h5>Decision Tree Matrix</h5>
+                <div class="bg-light border rounded d-flex align-items-center justify-content-center mt-3" style="height: 250px;">
+                    <img src="{{ url_for('static', filename='images/dt_confusion_matrix.png') }}" alt="Decision Tree Confusion Matrix" class="img-fluid rounded border mt-3">                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 p-3">
+                <h5>Random Forest Matrix</h5>
+                <div class="bg-light border rounded d-flex align-items-center justify-content-center mt-3" style="height: 250px;">
+                    <img src="{{ url_for('static', filename='images/rf_confusion_matrix.png') }}" alt="Random Forest Confusion Matrix" class="img-fluid rounded border mt-3">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow border-start border-success border-5">
+        <div class="card-body">
+            <h2 class="text-success">🏆 Final Conclusion & Deployment</h2>
+            <p class="fs-5">Based on the evaluation metrics, the <strong>Random Forest Classifier</strong> has been selected as the production model for the FocusPet application.</p>
+            <p><strong>Why?</strong></p>
+            <ul>
+                <li>It consistently provided the highest Accuracy score on unseen test data.</li>
+                <li>It effectively handles the complex, non-linear relationships between a user's digital habits (screen time reduction vs. game trivias) without requiring extensive data scaling.</li>
+                <li>The <i>Feature Importance</i> attribute of the Random Forest gave us exact business insights into which behaviors drive user success.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="/model-engineering" class="btn btn-outline-secondary px-4">⬅ Back</a>
+        <a href="/" class="btn btn-dark px-5 fw-bold">Return to Project Home</a>
+    </div>
+
+</div>
+
+</body>
+</html>
