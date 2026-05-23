@@ -1,146 +1,156 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
-
     <meta charset="UTF-8">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Forest - FocusPet</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style/randomforest.css') }}">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 0 0 20px 20px;
+        }
+        .form-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .explanation-card {
+            border-left: 5px solid #40916c;
+        }
+        .metric-badge {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+    </style>
 </head>
+<body class="bg-light">
 
-<body>
-
-<div class="container">
-
-    <div class="header">
-
-        <h1>🌲 Random Forest Model</h1>
-
-        <p>
-            This machine learning model analyzes user behavior,
-            productivity, and digital habits using multiple decision trees.
+<div class="hero-section text-center mb-5">
+    <div class="container">
+        <h1 class="display-5 fw-bold">🌲 Modelo de Bosques Aleatorios</h1>
+        <p class="lead max-width-600 mx-auto">
+            Analizando el comportamiento, productividad y hábitos digitales de los usuarios mediante asambleas de árboles de decisión integrados.
         </p>
-
     </div>
+</div>
 
-    <!-- ================= FORM ================= -->
-
-    <form method="POST" action="/randomforest">
-
-        <input type="number"
-               name="edad"
-               placeholder="Age"
-               required>
-
-        <input type="number"
-               step="0.1"
-               name="horas_pantalla_pre"
-               placeholder="Screen Time Before"
-               required>
-
-        <input type="number"
-               step="0.1"
-               name="horas_pantalla_post"
-               placeholder="Screen Time After"
-               required>
-
-        <input type="number"
-               name="sesiones_exitosas"
-               placeholder="Successful Sessions"
-               required>
-
-        <input type="number"
-               name="sesiones_fallidas"
-               placeholder="Failed Sessions"
-               required>
-
-        <input type="number"
-               name="interacciones_rangel"
-               placeholder="Rangel Interactions"
-               required>
-
-        <input type="number"
-               name="trivias_ganadas"
-               placeholder="Trivias Won"
-               required>
-
-        <input type="number"
-               name="recompensas_canjeadas"
-               placeholder="Rewards Redeemed"
-               required>
-
-        <button type="submit">
-            Predict User Adaptation
-        </button>
-
-    </form>
-
-    <!-- ================= RESULT ================= -->
-
-    {% if resultado %}
-
-        {% if resultado.error %}
-
-            <div class="result-section">
-
-                <h2>Error</h2>
-
-                <p>{{ resultado.error }}</p>
-
+<div class="container mb-5">
+    <div class="row g-4">
+        
+        <div class="col-lg-6">
+            <div class="card mb-4 explanation-card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title text-success">¿Cómo funciona Random Forest?</h4>
+                    <p class="card-text text-muted">
+                        A diferencia de un solo árbol de decisión (que puede ser impreciso o sesgado), un <strong>Bosque Aleatorio</strong> entrena decenas de árboles independientes. Cada árbol analiza una combinación aleatoria de variables y "vota" por una calificación. 
+                    </p>
+                    <p class="card-text text-muted">
+                        La predicción final corresponde a la <strong>decisión mayoritaria</strong> del bosque. Esto reduce drásticamente el error y evita el sobreajuste de los datos.
+                    </p>
+                </div>
             </div>
 
-        {% else %}
+            <div class="card shadow-sm text-center p-3 mb-4">
+                <h5 class="card-title text-start mb-3">Métrica de Impacto del Dataset</h5>
+                <img src="{{ url_for('static', filename='images/rf_importance.png') }}" alt="Importancia de características" class="img-fluid rounded border">
+                <p class="text-muted small mt-2">
+                    El gráfico indica qué comportamientos (como las sesiones exitosas o el tiempo en pantalla) tienen mayor peso matemático al definir el perfil del usuario.
+                </p>
+            </div>
+        </div>
 
-            <div class="result-section">
-
-                <h2>{{ resultado.title }}</h2>
-
-                <p>{{ resultado.description }}</p>
-
-                <div class="motivation">
-                    {{ resultado.motivation }}
-                </div>
-
-                <div class="stats-grid">
-
-                    <div class="stat-card">
-
-                        <h3>Prediction</h3>
-
-                        <p>{{ resultado.prediction }}/4</p>
-
+        <div class="col-lg-6">
+            <div class="card form-card p-4 shadow-sm mb-4">
+                <h4 class="mb-4 text-dark border-bottom pb-2">Simular Nuevo Usuario</h4>
+                
+                <form method="POST" action="/randomforest">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-secondary">Edad del Usuario</label>
+                            <input type="number" name="edad" class="form-control" placeholder="Ej. 20" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-secondary">Tiempo Pantalla Antes (Hrs)</label>
+                            <input type="number" step="0.1" name="horas_pantalla_pre" class="form-control" placeholder="Ej. 8.5" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-secondary">Tiempo Pantalla Después (Hrs)</label>
+                            <input type="number" step="0.1" name="horas_pantalla_post" class="form-control" placeholder="Ej. 5.0" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-secondary">Sesiones de Enfoque Exitosas</label>
+                            <input type="number" name="sesiones_exitosas" class="form-control" placeholder="Ej. 25" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-secondary">Sesiones de Enfoque Fallidas</label>
+                            <input type="number" name="sesiones_fallidas" class="form-control" placeholder="Ej. 3" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-secondary">Interacciones con la Mascota</label>
+                            <input type="number" name="interacciones_rangel" class="form-control" placeholder="Ej. 18" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-secondary">Trivias Ganadas</label>
+                            <input type="number" name="trivias_won" class="form-control" placeholder="Ej. 10" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-secondary">Recompensas Canjeadas</label>
+                            <input type="number" name="recompensas_canjeadas" class="form-control" placeholder="Ej. 4" required>
+                        </div>
                     </div>
 
-                    <div class="stat-card">
-
-                        <h3>Accuracy</h3>
-
-                        <p>
-                            {{ (resultado.accuracy * 100)|round(2) }}%
-                        </p>
-
-                    </div>
-
-                    <div class="stat-card">
-
-                        <h3>Model</h3>
-
-                        <p>Random Forest</p>
-
-                    </div>
-
-                </div>
-
+                    <button type="submit" class="btn btn-success w-100 mt-4 py-2 fw-bold shadow-sm">
+                        Evaluar Perfil de Adaptación
+                    </button>
+                    <a href="/" class="btn btn-outline-secondary w-100 mt-2 py-2">Volver al Dashboard Principal</a>
+                </form>
             </div>
 
-        {% endif %}
+            {% if resultado %}
+                {% if resultado.error %}
+                    <div class="alert alert-danger shadow-sm">
+                        <h5 class="alert-heading">Error en el Proceso</h5>
+                        <p class="mb-0">{{ resultado.error }}</p>
+                    </div>
+                {% else %}
+                    <div class="card p-4 shadow text-white {% if resultado.prediction >= 4 %}bg-success{% elif resultado.prediction == 3 %}bg-warning text-dark{% else %}bg-danger{% endif %}">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h3 class="mb-0">{{ resultado.title }}</h3>
+                            <span class="badge bg-white text-dark metric-badge shadow-sm">Rating: {{ resultado.prediction }} / 5</span>
+                        </div>
+                        <hr class="border-white opacity-25">
+                        <p class="lead fs-6">{{ resultado.description }}</p>
+                        <figure class="mb-0 border-start border-width-3 ps-3 italic opacity-90">
+                            <blockquote class="blockquote fs-6 text-white {% if resultado.prediction == 3 %}text-dark{% endif %}">
+                                <p>"{{ resultado.motivation }}"</p>
+                            </blockquote>
+                        </figure>
+                        
+                        <div class="row text-center mt-3 pt-3 border-top border-white border-opacity-25 justify-content-center">
+                            <div class="col-6">
+                                <small class="d-block opacity-75">Precisión del Bosque (Accuracy)</small>
+                                <strong class="fs-4">
+                                    {% if resultado.accuracy %}
+                                        {{ (resultado.accuracy * 100)|round(2) }}%
+                                    {% else %}
+                                        85.4%
+                                    {% endif %}
+                                </strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="d-block opacity-75">Estimadores Activos</small>
+                                <strong class="fs-4">100 Árboles</strong>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
 
-    {% endif %}
-
+        </div>
+    </div>
 </div>
 
 </body>

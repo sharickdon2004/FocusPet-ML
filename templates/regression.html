@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regresión Lineal - FocusPet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <h1 class="text-center mb-4">Modelo de Regresión Lineal</h1>
+    
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title">¿Qué hace este modelo?</h4>
+            <p class="card-text">
+                La <strong>Regresión Lineal</strong> es un algoritmo de Machine Learning que busca encontrar la relación entre una variable dependiente y una o más variables independientes ajustando una línea recta a los datos. 
+            </p>
+            <p>
+                En nuestro caso para <strong>FocusPet</strong>, estamos utilizando todas las estadísticas de interacción (edad, reducción de tiempo en pantalla, trivias ganadas, recompensas, etc.) para <strong>predecir la calificación final (beta_rating)</strong> que un usuario le daría a la aplicación.
+            </p>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-6 d-flex align-items-center">
+            <div>
+                <h4>Análisis de la Gráfica</h4>
+                <p>La gráfica de la derecha muestra la evaluación del modelo sobre los datos de prueba que nunca antes había visto.</p>
+                <ul>
+                    <li>El eje <strong>X</strong> muestra el puntaje real otorgado en el Dataset.</li>
+                    <li>El eje <strong>Y</strong> muestra el puntaje que predijo la inteligencia artificial.</li>
+                    <li>La línea <strong class="text-danger">Roja punteada</strong> representa la predicción perfecta. Mientras más cerca estén los puntos azules a esta línea, más preciso es nuestro modelo.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6 text-center">
+            <img src="{{ url_for('static', filename='images/lr_results.png') }}" alt="Resultados de Regresión Lineal" class="img-fluid border rounded shadow-sm">
+        </div>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Haz una Predicción en Vivo</h4>
+        </div>
+        <div class="card-body">
+            
+            {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST" action="/linearregression">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label>Edad</label>
+                        <input type="number" step="any" name="age" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Screen Time Pre (hrs)</label>
+                        <input type="number" step="any" name="screen_time_pre" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Screen Time Post (hrs)</label>
+                        <input type="number" step="any" name="screen_time_post" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Sesiones Exitosas</label>
+                        <input type="number" step="any" name="successful_sessions" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Sesiones Fallidas</label>
+                        <input type="number" step="any" name="failed_sessions" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Interacciones</label>
+                        <input type="number" step="any" name="rangel_interactions" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Trivias Ganadas</label>
+                        <input type="number" step="any" name="trivias_won" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Recompensas Canjeadas</label>
+                        <input type="number" step="any" name="rewards_redeemed" class="form-control" required>
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-primary px-5">Predecir Rating (Beta)</button>
+                    <a href="/" class="btn btn-secondary px-5">Volver al Inicio</a>
+                </div>
+            </form>
+
+            {% if prediction %}
+            <div class="alert alert-success mt-4 text-center">
+                <h4 class="mb-0">La calificación estimada del usuario será de: <strong>{{ prediction }} / 5.0</strong></h4>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
