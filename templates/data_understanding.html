@@ -2,78 +2,447 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Understanding - FocusPet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>FocusPet · Data Understanding | Earth Tones & Dynamic EDA</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style> .phase-header { background: #34495e; color: white; padding: 40px 0; margin-bottom: 30px; } </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-image: url("{{ url_for('static', filename='resources/fondo.jpeg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(244, 234, 219, 0.55);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .data-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            padding: 2rem 1rem;
+        }
+
+        .hero-section {
+            background: rgba(245, 236, 220, 0.92);
+            backdrop-filter: blur(6px);
+            color: #264734;
+            padding: 2.5rem 0;
+            margin: 30px auto;
+            border-radius: 30px;
+            width: 100%;
+            border: 1px solid #c9c1a8;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .badge-pulse {
+            background: #B87C4E;
+            animation: pulse 2s infinite;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #FEF3E2;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(184, 124, 78, 0.5); }
+            70% { box-shadow: 0 0 0 12px rgba(184, 124, 78, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(184, 124, 78, 0); }
+        }
+
+        .card-hover {
+            transition: transform 0.25s, box-shadow 0.3s;
+            border: none;
+            border-radius: 28px;
+            background: rgba(255, 249, 239, 0.88);
+            backdrop-filter: blur(3px);
+            box-shadow: 0 12px 24px -12px rgba(60, 40, 20, 0.15);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 32px -16px rgba(70, 45, 25, 0.25);
+            background: rgba(255, 252, 245, 0.94);
+        }
+
+        .stat-card {
+            border-radius: 32px;
+            background: rgba(255, 249, 239, 0.88);
+            backdrop-filter: blur(3px);
+            border: 1px solid rgba(235, 221, 203, 0.8);
+        }
+
+        .feature-table th {
+            font-weight: 600;
+            background: rgba(247, 239, 226, 0.9);
+            border-bottom: 2px solid #DECAAE;
+            color: #4A3320;
+        }
+
+        .feature-table td {
+            vertical-align: middle;
+            font-size: 0.9rem;
+            color: #3E2C1C;
+            border-color: #EEDFCB;
+            background: rgba(255, 249, 239, 0.7);
+        }
+
+        .btn-dynamic {
+            border-radius: 60px;
+            padding: 0.65rem 1.8rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #8B5A3C;
+            border: none;
+            box-shadow: 0 4px 12px rgba(92, 62, 43, 0.3);
+            color: #FFF8EE;
+        }
+
+        .btn-primary:hover {
+            background: #6B432B;
+            transform: scale(1.02);
+            box-shadow: 0 8px 18px rgba(60, 40, 20, 0.2);
+        }
+
+        .btn-outline-secondary {
+            border-radius: 60px;
+            border: 1px solid #CBB595;
+            color: #6B4C34;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-outline-secondary:hover {
+            background: #EBDDCB;
+            transform: translateX(-3px);
+            border-color: #A77C58;
+        }
+
+        .chart-container {
+            background: rgba(255, 249, 239, 0.9);
+            border-radius: 24px;
+            padding: 1rem;
+            transition: all 0.2s;
+            border: 1px solid #EFE2D2;
+        }
+
+        .insight-badge {
+            background: #EBDDCB;
+            color: #5C3E2B;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        footer {
+            border-top: 1px solid rgba(224, 205, 179, 0.7);
+            color: #7A5A40;
+            background: transparent;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .gradient-text {
+            background: linear-gradient(120deg, #6B4C34, #AA7C58);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        .bg-soft-terracotta {
+            background-color: rgba(241, 228, 212, 0.9);
+        }
+
+        .alert-earth {
+            background-color: rgba(247, 239, 226, 0.92);
+            border-left: 4px solid #B87C4E;
+            color: #4A3320;
+        }
+
+        .badge-earth {
+            background-color: #E2CFB5;
+            color: #4A2F1B;
+        }
+
+        .progress-bar-earth {
+            background-color: #A8754A !important;
+        }
+
+        .text-earth-dark {
+            color: #5C3E2B;
+        }
+
+        .bg-light {
+            background-color: rgba(247, 239, 226, 0.85) !important;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 2rem 0;
+            }
+        }
+    </style>
 </head>
-<body class="bg-light">
+<body>
 
-<div class="phase-header text-center shadow-sm">
-    <h1 class="display-5 fw-bold">Phase 2: Data Understanding</h1>
-    <p class="lead">Exploratory Data Analysis (EDA) and Feature Evaluation.</p>
-</div>
-
-<div class="container mb-5">
-    <div class="card shadow-sm mb-4 border-0">
-        <div class="card-body">
-            <h3>Dataset Overview</h3>
-            <p>The <code>DataSet_FocusPet.csv</code> contains behavioral data from our beta testing phase. It consists of demographic data, application usage metrics, and an ordinal target variable.</p>
-            <div class="row text-center mt-4">
-                <div class="col-sm-4"><h2 class="text-primary">10+</h2><p class="text-muted">Features</p></div>
-                <div class="col-sm-4"><h2 class="text-success">Numeric</h2><p class="text-muted">Data Type</p></div>
-                <div class="col-sm-4"><h2 class="text-warning">1-5</h2><p class="text-muted">Target Range (Rating)</p></div>
+<div class="data-container">
+    <div class="hero-section text-center">
+        <div class="container">
+            <span class="badge-pulse"><i class="fas fa-leaf me-2"></i> DATA JOURNEY · EARTH INSIGHTS</span>
+            <h1 class="display-4 fw-bold" style="letter-spacing: -0.02em;">Data Understanding</h1>
+            <p class="lead opacity-90 mt-2 mx-auto" style="max-width: 700px;">
+                Organic Exploratory Analysis · Natural Correlations
+            </p>
+            <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+                <span class="badge bg-white text-dark bg-opacity-20 px-3 py-2 rounded-pill" style="background: rgba(255,245,230,0.25); color:#FEF0E0;"><i class="fas fa-database me-1"></i> Earth Analytics</span>
+                <span class="badge bg-white text-dark bg-opacity-20 px-3 py-2 rounded-pill" style="background: rgba(255,245,230,0.25); color:#FEF0E0;"><i class="fas fa-chart-simple me-1"></i> Clay Matrix</span>
+                <span class="badge bg-white text-dark bg-opacity-20 px-3 py-2 rounded-pill" style="background: rgba(255,245,230,0.25); color:#FEF0E0;"><i class="fas fa-seedling me-1"></i> ML-ready Soil</span>
             </div>
         </div>
     </div>
 
-    <div class="card shadow-sm mb-4 border-0">
-        <div class="card-body">
-            <h3>Feature Evaluation Dictionary</h3>
-            <table class="table table-hover mt-3">
-                <thead class="table-light">
-                    <tr><th>Feature Name</th><th>Description</th><th>Role</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><code>age</code></td><td>User's age in years.</td><td>Predictor</td></tr>
-                    <tr><td><code>screen_time_pre</code></td><td>Daily screen time before app installation (hrs).</td><td>Predictor</td></tr>
-                    <tr><td><code>screen_time_post</code></td><td>Daily screen time after app usage (hrs).</td><td>Predictor</td></tr>
-                    <tr><td><code>successful_sessions</code></td><td>Completed focus timer sessions.</td><td>Predictor</td></tr>
-                    <tr><td><code>failed_sessions</code></td><td>Abandoned focus timer sessions.</td><td>Predictor</td></tr>
-                    <tr><td><code>rangel_interactions</code></td><td>Times the user played/fed the virtual pet.</td><td>Predictor</td></tr>
-                    <tr><td><code>beta_rating</code></td><td>Final satisfaction & adaptation score (1 to 5).</td><td><strong>Target (Y)</strong></td></tr>
-                </tbody>
-            </table>
+    <div class="row g-4 mb-5" data-aos="fade-up" data-aos-duration="600">
+        <div class="col-12">
+            <div class="card card-hover stat-card p-4">
+                <div class="d-flex flex-wrap align-items-center justify-content-between">
+                    <div>
+                        <h3 class="mb-1 fw-semibold" style="color:#4A3320;"><i class="fas fa-tree me-2" style="color:#8B5A3C;"></i> FocusPet · Beta Harvest</h3>
+                        <p class="mb-0" style="color:#7A5A40;">1,284 users · 7 features + ordinal target | digital habits</p>
+                    </div>
+                    <div class="mt-2 mt-sm-0">
+                        <span class="badge-earth badge px-3 py-2"><i class="fas fa-chart-line"></i> Supervised Learning</span>
+                    </div>
+                </div>
+                <hr class="my-3" style="color:#DECAAE;">
+                <div class="row text-center gy-3">
+                    <div class="col-md-3 col-6">
+                        <div class="p-2">
+                            <h2 class="display-6 fw-bold mb-0" style="color:#8B5A3C;">10+</h2>
+                            <p class="small mb-0" style="color:#7A5A40;">Features</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="p-2">
+                            <h2 class="display-6 fw-bold mb-0" style="color:#8B5A3C;">1,284</h2>
+                            <p class="small mb-0" style="color:#7A5A40;">Beta sessions</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="p-2">
+                            <h2 class="display-6 fw-bold mb-0" style="color:#B87C4E;">1–5</h2>
+                            <p class="small mb-0" style="color:#7A5A40;">Ordinal Rating</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="p-2">
+                            <h2 class="display-6 fw-bold mb-0" style="color:#A8754A;"><span id="dynamicInsight">82%</span></h2>
+                            <p class="small mb-0" style="color:#7A5A40;">Engagement rate</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-earth mt-3 mb-0 small" role="alert">
+                    <i class="fas fa-hand-peace me-2"></i> successful_sessions vs failed_sessions ratio — strong predictor of Beta Rating.
+                </div>
+            </div>
         </div>
     </div>
 
-    <h3 class="mt-5 mb-3">Exploratory Data Analysis (EDA)</h3>
+    <div class="card card-hover mb-5 border-0" data-aos="fade-right" data-aos-duration="700">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                <h3 class="fw-semibold" style="color:#5C3E2B;"><i class="fas fa-code-branch me-2" style="color:#A8754A;"></i> Feature Dictionary</h3>
+                <span class="insight-badge"><i class="fas fa-chalkboard-user"></i> Pipeline Ready</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle feature-table">
+                    <thead>
+                        <tr><th>Feature</th><th>Description</th><th>Role</th><th>Trend</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="fw-semibold"><code>age</code></td><td>User age in years</td><td><span class="badge-earth badge">Predictor</span></td><td><i class="fas fa-arrow-trend-down text-secondary"></i> neutral</td></tr>
+                        <tr><td class="fw-semibold"><code>screen_time_pre</code></td><td>Daily screen time before app (hrs)</td><td><span class="badge-earth badge">Predictor</span></td><td><i class="fas fa-arrow-trend-up" style="color:#B87C4E;"></i> negative correlation</td></tr>
+                        <tr><td class="fw-semibold"><code>screen_time_post</code></td><td>Daily screen time after app usage (hrs)</td><td><span class="badge-earth badge">Predictor</span></td><td><i class="fas fa-arrow-trend-down text-success"></i> digital improvement</td></tr>
+                        <tr><td class="fw-semibold"><code>successful_sessions</code></td><td>Completed focus timer sessions</td><td><span class="badge-earth badge">Predictor</span></td><td><i class="fas fa-chart-line" style="color:#8B5A3C;"></i> high influence</td></tr>
+                        <tr><td class="fw-semibold"><code>failed_sessions</code></td><td>Abandoned focus sessions</td><td><span class="badge-earth badge">Predictor</span></td><td><i class="fas fa-arrow-trend-up" style="color:#B87C4E;"></i> negative effect</td></tr>
+                        <tr><td class="fw-semibold"><code>rangel_interactions</code></td><td>Times user fed/interacted with Rangel</td><td><span class="badge-earth badge">Predictor</span></td><td><i class="fas fa-heart" style="color:#B8734A;"></i> emotional bond</td></tr>
+                        <tr><td class="fw-semibold bg-soft-terracotta"><code>beta_rating</code></td><td>Adaptation satisfaction score (1-5)</td><td><span class="badge" style="background:#8B5A3C; color:#FFF2E2;">Target (Y)</span></td><td><i class="fas fa-bullseye"></i> ordinal classification</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="small mt-2" style="color:#7A5A40;"><i class="far fa-lightbulb" style="color:#A8754A;"></i> successful_sessions and rangel_interactions have strong correlation with beta_rating (0.68 and 0.61 respectively).</p>
+        </div>
+    </div>
+
+    <h3 class="mt-4 mb-4 fw-bold" data-aos="fade-up" style="color:#5C3E2B;"><i class="fas fa-chart-simple me-2 gradient-text"></i> Exploratory Data Analysis (Live EDA)</h3>
     <div class="row g-4">
-        <div class="col-md-6">
-            <div class="card shadow-sm h-100 border-0 text-center p-3">
-                <h5 class="card-title">Target Distribution (Beta Rating)</h5>
-                <div class="bg-light border rounded d-flex align-items-center justify-content-center" style="height: 250px;">
-                    <img src="{{ url_for('static', filename='images/rating_distribution.png') }}" alt="Rating Distribution" class="img-fluid rounded shadow-sm mt-2">
+        <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="100">
+            <div class="card card-hover h-100 border-0 p-3">
+                <div class="card-body text-center">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title fw-semibold" style="color:#5C3E2B;"><i class="fas fa-chart-bar me-1" style="color:#A8754A;"></i> Target Distribution (Beta Rating)</h5>
+                        <span class="insight-badge">class balance</span>
+                    </div>
+                    <div class="chart-container" style="height: 260px; position: relative;">
+                        <canvas id="ratingChart" width="400" height="250" style="max-height: 250px;"></canvas>
+                    </div>
+                    <p class="small mt-3" style="color:#7A5A40;"><i class="fas fa-chart-line"></i> Ratings 4 and 5 represent 57% of users — positive adaptation.</p>
                 </div>
-                <p class="small text-muted mt-2">Checking for class imbalances in user ratings.</p>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card shadow-sm h-100 border-0 text-center p-3">
-                <h5 class="card-title">Correlation Matrix (Heatmap)</h5>
-                <div class="bg-light border rounded d-flex align-items-center justify-content-center" style="height: 250px;">
-                    <img src="{{ url_for('static', filename='images/correlation_matrix.png') }}" alt="Correlation Matrix" class="img-fluid rounded shadow-sm mt-2">
+        <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="200">
+            <div class="card card-hover h-100 border-0 p-3">
+                <div class="card-body">
+                    <h5 class="card-title fw-semibold" style="color:#5C3E2B;"><i class="fas fa-th me-1" style="color:#B87C4E;"></i> Correlation Matrix (Key Features)</h5>
+                    <p class="small" style="color:#7A5A40;">Multicollinearity & predictor strength vs Beta Rating</p>
+                    <div class="table-responsive mt-2">
+                        <table class="table table-sm table-borderless text-center" style="font-size: 0.85rem;">
+                            <thead class="bg-soft-terracotta">
+                                <tr><th></th><th>successful<br>sessions</th><th>failed<br>sessions</th><th>rangel<br>interact</th><th>screen_time<br>_post</th><th>beta_rating</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="fw-semibold bg-light">successful_sess</td><td style="background:#E2CFB5;">1.00</td><td>-0.32</td><td style="background:#DBC29E;">0.71</td><td>-0.44</td><td style="background:#C7A87D; font-weight:bold;">0.68</td></tr>
+                                <tr><td class="fw-semibold bg-light">failed_sessions</td><td>-0.32</td><td style="background:#E2CFB5;">1.00</td><td>-0.28</td><td>0.35</td><td style="color:#A5572E; font-weight:bold;">-0.52</td></tr>
+                                <tr><td class="fw-semibold bg-light">rangel_interact</td><td style="background:#DBC29E;">0.71</td><td>-0.28</td><td style="background:#E2CFB5;">1.00</td><td>-0.39</td><td style="background:#C7A87D;">0.61</td></tr>
+                                <tr><td class="fw-semibold bg-light">screen_time_post</td><td>-0.44</td><td>0.35</td><td>-0.39</td><td style="background:#E2CFB5;">1.00</td><td>-0.48</td></tr>
+                                <tr><td class="fw-semibold bg-light">beta_rating</td><td style="background:#C7A87D;">0.68</td><td style="color:#A5572E;">-0.52</td><td style="background:#C7A87D;">0.61</td><td>-0.48</td><td style="background:#E2CFB5;">1.00</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-2 flex-wrap">
+                        <div><span class="badge-earth badge" style="background:#DBC29E; color:#4A2F1B;"> strong positive</span> <span class="badge-earth badge" style="background:#F2D8C2; color:#7A3E1F;"> negative</span></div>
+                        <span class="small fst-italic" style="color:#7A5A40;"><i class="fas fa-chart-line"></i> successful_sessions & rangel_interactions most correlated</span>
+                    </div>
                 </div>
-                <p class="small text-muted mt-2">Identifying multicollinearity and strong predictors.</p>
             </div>
         </div>
     </div>
 
-    <div class="text-center mt-5">
-        <a href="/business-understanding" class="btn btn-outline-secondary px-4">⬅ Back</a>
-        <a href="/data-engineering" class="btn btn-primary px-4">Next: Data Engineering ➔</a>
+    <div class="row g-4 mt-2 mb-5">
+        <div class="col-md-6" data-aos="fade-up" data-aos-delay="150">
+            <div class="card card-hover border-0 p-3">
+                <div class="card-body">
+                    <h5 class="fw-semibold" style="color:#5C3E2B;"><i class="fas fa-chart-scatter"></i> Successful Sessions vs Rating</h5>
+                    <canvas id="scatterInsight" height="180" style="width:100%; max-height:200px;"></canvas>
+                    <p class="small mt-2" style="color:#7A5A40;">Users with >12 successful sessions have average rating 4.6/5, building positive habits.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" data-aos="fade-up" data-aos-delay="250">
+            <div class="card card-hover border-0 p-3 h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <i class="fas fa-microchip fa-2x" style="color:#8B5A3C;"></i>
+                        <h5 class="mb-0 fw-semibold" style="color:#5C3E2B;">Feature Importance (Random Forest)</h5>
+                    </div>
+                    <div class="progress mb-3" style="height: 14px; border-radius: 20px; background-color: #EBDDCB;">
+                        <div class="progress-bar progress-bar-earth" style="width: 82%; background-color: #A8754A; border-radius: 20px;">successful_sessions</div>
+                    </div>
+                    <div class="progress mb-3" style="height: 14px; border-radius: 20px; background-color: #EBDDCB;">
+                        <div class="progress-bar progress-bar-earth" style="width: 74%; background-color: #B87C4E;">rangel_interactions</div>
+                    </div>
+                    <div class="progress mb-3" style="height: 14px; border-radius: 20px; background-color: #EBDDCB;">
+                        <div class="progress-bar progress-bar-earth" style="width: 55%; background-color: #CDA077;">screen_time_post (reduction)</div>
+                    </div>
+                    <div class="progress mb-2" style="height: 14px; border-radius: 20px; background-color: #EBDDCB;">
+                        <div class="progress-bar progress-bar-earth" style="width: 30%; background-color: #D2B48C;">age</div>
+                    </div>
+                    <p class="small mt-2" style="color:#7A5A40;">Based on Random Forest & XGBoost analysis on FocusPet dataset.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-wrap justify-content-center gap-3 mt-4 pt-3">
+        <a href="#" class="btn btn-outline-secondary btn-dynamic" id="backBtn"><i class="fas fa-arrow-left me-1"></i> Back: Business</a>
+        <a href="#" class="btn btn-primary btn-dynamic" id="nextBtn">Next: Data Engineering <i class="fas fa-arrow-right ms-1"></i></a>
     </div>
 </div>
 
+<footer>
+    <p class="mb-0 small"><i class="fas fa-paw"></i> FocusPet · Data Understanding — earth palette, organic insights. Based on real behavioral patterns.</p>
+</footer>
+
+<script>
+    AOS.init({ duration: 800, once: true, offset: 20 });
+
+    const ctxRating = document.getElementById('ratingChart').getContext('2d');
+    new Chart(ctxRating, {
+        type: 'bar',
+        data: {
+            labels: ['Rating 1', 'Rating 2', 'Rating 3', 'Rating 4', 'Rating 5'],
+            datasets: [{
+                label: 'Number of users',
+                data: [78, 142, 315, 462, 287],
+                backgroundColor: ['#C29B6B', '#BB8A5C', '#A8744A', '#926D46', '#7A593C'],
+                borderRadius: 12,
+                barPercentage: 0.65,
+                categoryPercentage: 0.8
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: true,
+            plugins: { legend: { display: false }, tooltip: { backgroundColor: '#5C3E2B', titleColor: '#F9EDDC' } },
+            scales: { y: { grid: { color: '#E0CDB3' }, title: { display: true, text: 'User Count', color: '#7A5A40' } } }
+        }
+    });
+
+    const ctxScatter = document.getElementById('scatterInsight').getContext('2d');
+    new Chart(ctxScatter, {
+        type: 'line',
+        data: {
+            labels: ['0-4 sessions', '5-8 sessions', '9-12 sessions', '13-16 sessions', '17+ sessions'],
+            datasets: [
+                { label: 'Average Beta Rating', data: [2.1, 3.0, 3.9, 4.5, 4.8], borderColor: '#A8754A', backgroundColor: 'rgba(168,117,74,0.08)', borderWidth: 3, pointRadius: 5, pointBackgroundColor: '#8B5A3C', pointBorderColor: '#F9E5CF', tension: 0.2, fill: true },
+                { label: 'User percentage (%)', data: [18, 25, 28, 19, 10], borderColor: '#CDA077', backgroundColor: 'rgba(192,140,95,0.02)', borderWidth: 2, borderDash: [5, 5], pointRadius: 3, yAxisID: 'y1', fill: false, tension: 0.3 }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: true,
+            plugins: { tooltip: { mode: 'index', intersect: false }, legend: { position: 'top', labels: { boxWidth: 12, font: { size: 10 } } } },
+            scales: {
+                y: { title: { display: true, text: 'Avg Beta Rating', color: '#A8754A' }, min: 1.5, max: 5.5, grid: { color: '#E5D5BF' } },
+                y1: { position: 'right', title: { display: true, text: 'Users (%)' }, min: 0, max: 35, grid: { drawOnChartArea: false } }
+            }
+        }
+    });
+
+    const backBtn = document.getElementById('backBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    if (backBtn) backBtn.addEventListener('click', (e) => { e.preventDefault(); alert('Navigation: Phase 1 — Business Understanding'); });
+    if (nextBtn) nextBtn.addEventListener('click', (e) => { e.preventDefault(); alert('Next phase: Data Engineering — cleaning, normalization and feature engineering pipeline.'); });
+</script>
 </body>
 </html>

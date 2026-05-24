@@ -2,33 +2,241 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business Understanding - FocusPet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>FocusPet · Business Understanding | Earth Tones</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style> .phase-header { background: #2c3e50; color: white; padding: 40px 0; margin-bottom: 30px; } </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-image: url("{{ url_for('static', filename='resources/fondo.jpeg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(244, 234, 219, 0.55);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .business-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            padding: 2rem 1rem;
+        }
+
+        .hero-section {
+            background: rgba(245, 236, 220, 0.92);
+            backdrop-filter: blur(6px);
+            color: #264734;
+            padding: 2.5rem 0;
+            margin: 30px auto;
+            border-radius: 30px;
+            width: 100%;
+            border: 1px solid #c9c1a8;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .badge-pulse {
+            background: #B87C4E;
+            animation: pulse 2s infinite;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #FEF3E2;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(184, 124, 78, 0.5); }
+            70% { box-shadow: 0 0 0 12px rgba(184, 124, 78, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(184, 124, 78, 0); }
+        }
+
+        .card-hover {
+            transition: transform 0.25s, box-shadow 0.3s;
+            border: none;
+            border-radius: 28px;
+            background: rgba(255, 249, 239, 0.88);
+            backdrop-filter: blur(3px);
+            box-shadow: 0 12px 24px -12px rgba(60, 40, 20, 0.15);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 32px -16px rgba(70, 45, 25, 0.25);
+            background: rgba(255, 252, 245, 0.94);
+        }
+
+        .border-earth-left {
+            border-left: 4px solid #8B5A3C !important;
+        }
+
+        .border-earth-left-success {
+            border-left: 4px solid #A8754A !important;
+        }
+
+        .btn-dynamic {
+            border-radius: 60px;
+            padding: 0.65rem 1.8rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #8B5A3C;
+            border: none;
+            box-shadow: 0 4px 12px rgba(92, 62, 43, 0.3);
+            color: #FFF8EE;
+        }
+
+        .btn-primary:hover {
+            background: #6B432B;
+            transform: scale(1.02);
+            box-shadow: 0 8px 18px rgba(60, 40, 20, 0.2);
+        }
+
+        .btn-outline-secondary {
+            border-radius: 60px;
+            border: 1px solid #CBB595;
+            color: #6B4C34;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-outline-secondary:hover {
+            background: #EBDDCB;
+            transform: translateX(-3px);
+            border-color: #A77C58;
+        }
+
+        .insight-badge {
+            background: #EBDDCB;
+            color: #5C3E2B;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            border-top: 1px solid rgba(224, 205, 179, 0.7);
+            color: #7A5A40;
+            background: transparent;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .card-title-custom {
+            color: #5C3E2B;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .card-title-custom i {
+            color: #8B5A3C;
+            margin-right: 0.5rem;
+        }
+
+        .objective-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .objective-list li {
+            margin-bottom: 0.75rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .objective-list li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: #8B5A3C;
+            position: absolute;
+            left: 0;
+        }
+
+        hr {
+            color: #DECAAE;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 2rem 0;
+            }
+        }
+    </style>
 </head>
-<body class="bg-light">
+<body>
 
-<div class="phase-header text-center shadow-sm">
-    <h1 class="display-5 fw-bold">Phase 1: Business Understanding</h1>
-    <p class="lead">Defining the problem, objectives, and project feasibility for FocusPet.</p>
-</div>
+<div class="business-container">
+    <div class="hero-section text-center">
+        <div class="container">
+            <span class="badge-pulse"><i class="fas fa-briefcase me-2"></i> BUSINESS FRAMEWORK · EARTH VISION</span>
+            <h1 class="display-4 fw-bold" style="letter-spacing: -0.02em;">Business Understanding</h1>
+            <p class="lead opacity-90 mt-2 mx-auto" style="max-width: 700px;">
+                Defining the problem, objectives, and project feasibility for FocusPet.
+            </p>
+            <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+                <span class="badge bg-white text-dark bg-opacity-20 px-3 py-2 rounded-pill" style="background: rgba(255,245,230,0.25); color:#FEF0E0;"><i class="fas fa-exclamation-triangle me-1"></i> Problem Statement</span>
+                <span class="badge bg-white text-dark bg-opacity-20 px-3 py-2 rounded-pill" style="background: rgba(255,245,230,0.25); color:#FEF0E0;"><i class="fas fa-bullseye me-1"></i> Objectives</span>
+                <span class="badge bg-white text-dark bg-opacity-20 px-3 py-2 rounded-pill" style="background: rgba(255,245,230,0.25); color:#FEF0E0;"><i class="fas fa-chart-line me-1"></i> Feasibility</span>
+            </div>
+        </div>
+    </div>
 
-<div class="container mb-5">
     <div class="row g-4">
-        <div class="col-md-6">
-            <div class="card h-100 shadow-sm border-0 border-start border-primary border-4">
+        <div class="col-md-6" data-aos="fade-right" data-aos-duration="600">
+            <div class="card card-hover h-100 p-3 border-earth-left">
                 <div class="card-body">
-                    <h3 class="card-title text-primary">1. Problem Statement</h3>
-                    <p>In the digital age, screen addiction and lack of productivity are growing concerns, especially among youth and students. Continuous digital distractions lead to reduced attention spans, poor academic performance, and degraded mental health. There is a need for a gamified solution that encourages healthy digital habits.</p>
+                    <span class="insight-badge"><i class="fas fa-exclamation-triangle me-1"></i> Challenge</span>
+                    <h3 class="card-title-custom"><i class="fas fa-question-circle"></i> 1. Problem Statement</h3>
+                    <p style="color: #4A3320;">In the digital age, screen addiction and lack of productivity are growing concerns, especially among youth and students. Continuous digital distractions lead to reduced attention spans, poor academic performance, and degraded mental health. There is a need for a gamified solution that encourages healthy digital habits.</p>
+                    <div class="mt-3">
+                        <span class="small" style="color:#8B5A3C;"><i class="fas fa-mobile-alt me-1"></i> Screen addiction</span>
+                        <span class="small mx-2">•</span>
+                        <span class="small" style="color:#8B5A3C;"><i class="fas fa-brain me-1"></i> Mental health</span>
+                        <span class="small mx-2">•</span>
+                        <span class="small" style="color:#8B5A3C;"><i class="fas fa-gamepad me-1"></i> Gamified solution</span>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card h-100 shadow-sm border-0 border-start border-success border-4">
+
+        <div class="col-md-6" data-aos="fade-left" data-aos-duration="600">
+            <div class="card card-hover h-100 p-3 border-earth-left-success">
                 <div class="card-body">
-                    <h3 class="card-title text-success">2. Project Objectives</h3>
-                    <ul>
+                    <span class="insight-badge"><i class="fas fa-bullseye me-1"></i> Goals</span>
+                    <h3 class="card-title-custom"><i class="fas fa-flag-checkered"></i> 2. Project Objectives</h3>
+                    <ul class="objective-list" style="color: #4A3320;">
                         <li><strong>Primary:</strong> Predict user adaptation and engagement (Beta Rating) using machine learning algorithms based on their digital behavior metrics.</li>
                         <li><strong>Secondary:</strong> Identify which behaviors (e.g., successful sessions, trivia participation) most strongly correlate with healthy digital habit formation.</li>
                         <li><strong>Product Goal:</strong> Use these insights to personalize the FocusPet app, keeping users motivated through their virtual pet (Rangel).</li>
@@ -36,22 +244,57 @@
                 </div>
             </div>
         </div>
-        <div class="col-12">
-            <div class="card shadow-sm border-0">
+
+        <div class="col-12" data-aos="fade-up" data-aos-duration="600" data-aos-delay="100">
+            <div class="card card-hover p-4">
                 <div class="card-body">
-                    <h3 class="card-title text-dark">3. Project Feasibility</h3>
-                    <p><strong>Technical Feasibility:</strong> High. The data is structured, and standard Supervised Machine Learning algorithms (Regression and Classification) are perfectly suited for this task.</p>
-                    <p><strong>Data Feasibility:</strong> We have gathered a reliable beta-testing dataset capturing real user interactions, screen times, and final subjective ratings. This dataset is rich enough to extract meaningful patterns.</p>
-                    <p><strong>Business Value:</strong> Accurately predicting user ratings allows the platform to proactively assist at-risk users (Rating 1 or 2) before they abandon the application, ensuring long-term retention.</p>
+                    <span class="insight-badge"><i class="fas fa-microchip me-1"></i> Viability</span>
+                    <h3 class="card-title-custom"><i class="fas fa-chart-line"></i> 3. Project Feasibility</h3>
+                    <div class="row g-4 mt-2">
+                        <div class="col-md-4">
+                            <div class="text-center p-3" style="background: rgba(139, 90, 60, 0.1); border-radius: 20px;">
+                                <i class="fas fa-microchip fa-2x" style="color: #8B5A3C;"></i>
+                                <h6 class="mt-2 fw-bold" style="color:#5C3E2B;">Technical Feasibility</h6>
+                                <p class="small mb-0" style="color:#4A3320;">High. Structured data with Supervised ML algorithms (Regression & Classification).</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3" style="background: rgba(139, 90, 60, 0.1); border-radius: 20px;">
+                                <i class="fas fa-database fa-2x" style="color: #8B5A3C;"></i>
+                                <h6 class="mt-2 fw-bold" style="color:#5C3E2B;">Data Feasibility</h6>
+                                <p class="small mb-0" style="color:#4A3320;">Beta-testing dataset with real user interactions, screen times, and ratings.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3" style="background: rgba(139, 90, 60, 0.1); border-radius: 20px;">
+                                <i class="fas fa-chart-line fa-2x" style="color: #8B5A3C;"></i>
+                                <h6 class="mt-2 fw-bold" style="color:#5C3E2B;">Business Value</h6>
+                                <p class="small mb-0" style="color:#4A3320;">Proactively assist at-risk users (Rating 1-2) before they abandon the app.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="text-center mt-4">
-        <a href="/" class="btn btn-outline-secondary px-4">Back to Home</a>
-        <a href="/data-understanding" class="btn btn-primary px-4">Next: Data Understanding ➔</a>
+
+    <div class="d-flex flex-wrap justify-content-center gap-3 mt-5 pt-3">
+        <a href="#" class="btn btn-outline-secondary btn-dynamic" id="backBtn"><i class="fas fa-arrow-left me-1"></i> Back to Home</a>
+        <a href="#" class="btn btn-primary btn-dynamic" id="nextBtn">Next: Data Understanding <i class="fas fa-arrow-right ms-1"></i></a>
     </div>
 </div>
 
+<footer>
+    <p class="mb-0 small"><i class="fas fa-paw"></i> FocusPet · Business Understanding — earth palette, strategic framework. Data-driven digital wellness.</p>
+</footer>
+
+<script>
+    AOS.init({ duration: 800, once: true, offset: 20 });
+
+    const backBtn = document.getElementById('backBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    if (backBtn) backBtn.addEventListener('click', (e) => { e.preventDefault(); alert('Navigation: Home page'); });
+    if (nextBtn) nextBtn.addEventListener('click', (e) => { e.preventDefault(); alert('Next phase: Data Understanding — exploratory analysis and feature evaluation.'); });
+</script>
 </body>
 </html>

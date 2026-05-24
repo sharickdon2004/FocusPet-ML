@@ -2,19 +2,433 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>FocusPet - Decision Tree | Prediction</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <style>
-        .graph-container { text-align: center; margin: 30px 0; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .graph-container img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #eaeaea; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-image: url("{{ url_for('static', filename='resources/fondo.jpeg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(244, 234, 219, 0.55);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .decisiontree-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            padding: 2rem 1rem;
+        }
+
+        .hero-section {
+            background: rgba(245, 236, 220, 0.92);
+            backdrop-filter: blur(6px);
+            color: #264734;
+            padding: 2.5rem 0;
+            margin: 30px auto;
+            border-radius: 30px;
+            width: 100%;
+            border: 1px solid #c9c1a8;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .badge-pulse {
+            background: #B87C4E;
+            animation: pulse 2s infinite;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #FEF3E2;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(184, 124, 78, 0.5); }
+            70% { box-shadow: 0 0 0 12px rgba(184, 124, 78, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(184, 124, 78, 0); }
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: rgba(255, 249, 239, 0.88);
+            backdrop-filter: blur(3px);
+            padding: 0.6rem 1.5rem;
+            border-radius: 60px;
+            text-decoration: none;
+            color: #5C3E2B;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: 1px solid rgba(222, 202, 174, 0.5);
+        }
+
+        .nav-btn:hover {
+            background: #EBDDCB;
+            transform: translateY(-2px);
+            color: #3E2A1F;
+        }
+
+        .info-section {
+            background: rgba(255, 249, 239, 0.88);
+            backdrop-filter: blur(3px);
+            border-radius: 28px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .info-section:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 252, 245, 0.94);
+        }
+
+        .info-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #5C3E2B;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #DECAAE;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-title span {
+            display: inline-block;
+            width: 4px;
+            height: 24px;
+            background: #8B5A3C;
+            border-radius: 4px;
+        }
+
+        .info-text {
+            color: #4A3320;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .model-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .stat {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            background: rgba(139, 90, 60, 0.1);
+            border-radius: 20px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #8B5A3C;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #7A5A40;
+            margin-top: 0.25rem;
+        }
+
+        .graph-container {
+            text-align: center;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            border: 1px solid #DECAAE;
+        }
+
+        .graph-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+        }
+
+        .rating-scale {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .rating-item {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 16px;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .rating-4 {
+            background: linear-gradient(135deg, #2d6a4f, #1b4332);
+            color: white;
+        }
+        .rating-3 {
+            background: linear-gradient(135deg, #40916c, #2d6a4f);
+            color: white;
+        }
+        .rating-2 {
+            background: linear-gradient(135deg, #B87C4E, #A8754A);
+            color: #2c1a0e;
+        }
+        .rating-1 {
+            background: linear-gradient(135deg, #7a4a35, #5C3E2B);
+            color: white;
+        }
+
+        .rating-desc {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            opacity: 0.9;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.6);
+            padding: 1rem;
+            border-radius: 16px;
+            border-left: 3px solid #8B5A3C;
+        }
+
+        .info-card h4 {
+            color: #5C3E2B;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-card p {
+            color: #4A3320;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .range {
+            font-size: 0.7rem;
+            color: #8B5A3C;
+            font-weight: 600;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: #5C3E2B;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .input-group input {
+            padding: 0.85rem;
+            border: 1px solid #DECAAE;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #8B5A3C;
+            box-shadow: 0 0 0 3px rgba(139, 90, 60, 0.2);
+            background: white;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #8B5A3C, #6B432B);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1rem;
+        }
+
+        .btn-submit:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 18px rgba(60, 40, 20, 0.3);
+        }
+
+        .error-box {
+            background: rgba(157, 107, 83, 0.9);
+            color: white;
+            padding: 1rem;
+            border-radius: 16px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .result-section {
+            background: rgba(255, 249, 239, 0.95);
+            backdrop-filter: blur(3px);
+            border-radius: 28px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 0.5rem 2rem;
+            border-radius: 60px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .badge-excellent {
+            background: linear-gradient(135deg, #2d6a4f, #1b4332);
+            color: white;
+        }
+        .badge-good {
+            background: linear-gradient(135deg, #40916c, #2d6a4f);
+            color: white;
+        }
+        .badge-regular {
+            background: linear-gradient(135deg, #B87C4E, #A8754A);
+            color: #2c1a0e;
+        }
+        .badge-needs-improvement {
+            background: linear-gradient(135deg, #7a4a35, #5C3E2B);
+            color: white;
+        }
+
+        .result-description {
+            color: #4A3320;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .motivation-box {
+            background: rgba(139, 90, 60, 0.1);
+            padding: 1rem;
+            border-radius: 20px;
+            margin: 1rem 0;
+            text-align: left;
+            font-style: italic;
+            color: #5C3E2B;
+        }
+
+        .accuracy-info {
+            font-size: 0.8rem;
+            color: #7A5A40;
+            margin-top: 0.5rem;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 2rem;
+            color: #8B5A3C;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .back-button:hover {
+            color: #5C3E2B;
+            transform: translateX(-4px);
+        }
+
+        footer {
+            border-top: 1px solid rgba(224, 205, 179, 0.7);
+            color: #7A5A40;
+            background: transparent;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 2rem 0;
+            }
+            .model-stats {
+                flex-direction: column;
+            }
+            .rating-scale {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
 
 <div class="decisiontree-container">
-    <h1 class="decisiontree-title">🌳 Decision Tree</h1>
-    <p class="decisiontree-subtitle">Enter user data to predict their FocusPet rating</p>
+    <div class="hero-section text-center">
+        <div class="container">
+            <span class="badge-pulse"><i class="fas fa-diagram-project me-2"></i> CLASSIFICATION ALGORITHM · DECISION TREE</span>
+            <h1 class="display-4 fw-bold" style="letter-spacing: -0.02em;">Decision Tree Model</h1>
+            <p class="lead opacity-90 mt-2 mx-auto" style="max-width: 700px;">
+                Predicting user adaptation and engagement (Beta Rating) using interpretable rule-based classification.
+            </p>
+            <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+                <span class="badge bg-white text-dark bg-opacity-20 px-3 py-2 rounded-pill" style="background: rgba(255,245,230,0.25); color:#FEF0E0;"><i class="fas fa-diagram-project me-1"></i> Decision Tree</span>
+                <span class="badge bg-white text-dark bg-opacity-20 px-3 py-2 rounded-pill" style="background: rgba(255,245,230,0.25); color:#FEF0E0;"><i class="fas fa-chart-simple me-1"></i> Gini Impurity</span>
+                <span class="badge bg-white text-dark bg-opacity-20 px-3 py-2 rounded-pill" style="background: rgba(255,245,230,0.25); color:#FEF0E0;"><i class="fas fa-code-branch me-1"></i> Max Depth: 5</span>
+            </div>
+        </div>
+    </div>
 
     <div class="nav-buttons">
         <a href="/" class="nav-btn">Home</a>
@@ -74,19 +488,19 @@
         </div>
         <div class="rating-scale">
             <div class="rating-item rating-4">
-                <strong>⭐ 4 - Excellent</strong>
+                <strong>4 - Excellent</strong>
                 <p class="rating-desc">Star user, exemplary digital habits</p>
             </div>
             <div class="rating-item rating-3">
-                <strong>⭐ 3 - Good</strong>
+                <strong>3 - Good</strong>
                 <p class="rating-desc">Positive impact, room for improvement</p>
             </div>
             <div class="rating-item rating-2">
-                <strong>⭐ 2 - Regular</strong>
+                <strong>2 - Regular</strong>
                 <p class="rating-desc">Inconsistent results, needs commitment</p>
             </div>
             <div class="rating-item rating-1">
-                <strong>⭐ 1 - Needs Improvement</strong>
+                <strong>1 - Needs Improvement</strong>
                 <p class="rating-desc">Not taking full advantage of FocusPet</p>
             </div>
         </div>
@@ -98,42 +512,42 @@
         </div>
         <div class="info-grid">
             <div class="info-card">
-                <h4>👤 Age</h4>
+                <h4>Age</h4>
                 <p>User's age in years. Helps understand generational behavior patterns.</p>
                 <span class="range">Range: 0-100 years</span>
             </div>
             <div class="info-card">
-                <h4>📱 Screen Hours (PRE)</h4>
+                <h4>Screen Hours (PRE)</h4>
                 <p>Daily screen time BEFORE using FocusPet.</p>
                 <span class="range">Range: 0-24 hours</span>
             </div>
             <div class="info-card">
-                <h4>📉 Screen Hours (POST)</h4>
+                <h4>Screen Hours (POST)</h4>
                 <p>Daily screen time AFTER using FocusPet. Lower values indicate success.</p>
                 <span class="range">Range: 0-24 hours</span>
             </div>
             <div class="info-card">
-                <h4>✅ Successful Sessions</h4>
+                <h4>Successful Sessions</h4>
                 <p>Number of successfully completed FocusPet sessions.</p>
                 <span class="range">Minimum: 0</span>
             </div>
             <div class="info-card">
-                <h4>❌ Failed Sessions</h4>
+                <h4>Failed Sessions</h4>
                 <p>Number of abandoned or failed sessions.</p>
                 <span class="range">Minimum: 0</span>
             </div>
             <div class="info-card">
-                <h4>🐶 Interactions with Rangel</h4>
+                <h4>Interactions with Rangel</h4>
                 <p>Total interactions with the virtual pet Rangel.</p>
                 <span class="range">Minimum: 0</span>
             </div>
             <div class="info-card">
-                <h4>🏆 Trivias Won</h4>
+                <h4>Trivias Won</h4>
                 <p>Number of educational trivia games won.</p>
                 <span class="range">Minimum: 0</span>
             </div>
             <div class="info-card">
-                <h4>🎁 Rewards Redeemed</h4>
+                <h4>Rewards Redeemed</h4>
                 <p>Number of rewards claimed in the store.</p>
                 <span class="range">Minimum: 0</span>
             </div>
@@ -197,12 +611,12 @@
         </div>
 
         <div class="result-description">
-            <strong>📋 Analysis:</strong><br>
+            <strong>Analysis:</strong><br>
             {{ description }}
         </div>
 
         <div class="motivation-box">
-            <strong>💬 Motivational message:</strong><br>
+            <strong>Motivational message:</strong><br>
             {{ motivation }}
         </div>
 
@@ -216,9 +630,16 @@
     {% endif %}
 
     <div style="text-align: center; margin-top: 20px;">
-        <a href="/" class="back-button">← Back to home</a>
+        <a href="/" class="back-button">Back to home</a>
     </div>
 </div>
 
+<footer>
+    <p class="mb-0 small"><i class="fas fa-paw"></i> FocusPet · Decision Tree — interpretable rule-based classification for user rating prediction.</p>
+</footer>
+
+<script>
+    AOS.init({ duration: 800, once: true, offset: 20 });
+</script>
 </body>
 </html>

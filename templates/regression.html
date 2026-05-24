@@ -1,99 +1,339 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Regresión Lineal - FocusPet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Linear Regression - FocusPet</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+        * {
+            transition: all 0.2s ease;
+        }
 
-<div class="container py-5">
-    <h1 class="text-center mb-4">Modelo de Regresión Lineal</h1>
-    
-    <div class="card mb-4 shadow-sm">
-        <div class="card-body">
-            <h4 class="card-title">¿Qué hace este modelo?</h4>
-            <p class="card-text">
-                La <strong>Regresión Lineal</strong> es un algoritmo de Machine Learning que busca encontrar la relación entre una variable dependiente y una o más variables independientes ajustando una línea recta a los datos. 
-            </p>
-            <p>
-                En nuestro caso para <strong>FocusPet</strong>, estamos utilizando todas las estadísticas de interacción (edad, reducción de tiempo en pantalla, trivias ganadas, recompensas, etc.) para <strong>predecir la calificación final (beta_rating)</strong> que un usuario le daría a la aplicación.
-            </p>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url("{{ url_for('static', filename='resources/fondo.jpeg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(244, 234, 219, 0.55);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-section {
+            background: rgba(245, 236, 220, 0.92);
+            backdrop-filter: blur(6px);
+            color: #264734;
+            padding: 2.5rem 0;
+            margin: 30px auto;
+            border-radius: 30px;
+            width: 92%;
+            border: 1px solid #c9c1a8;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .badge-pulse {
+            background: #B87C4E;
+            animation: pulse 2s infinite;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #FEF3E2;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(184, 124, 78, 0.5); }
+            70% { box-shadow: 0 0 0 12px rgba(184, 124, 78, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(184, 124, 78, 0); }
+        }
+
+        .card-transparent {
+            background: rgba(245, 236, 220, 0.95);
+            backdrop-filter: blur(3px);
+            border: none;
+            border-radius: 28px;
+            transition: transform 0.25s, box-shadow 0.3s;
+            box-shadow: 0 12px 24px -12px rgba(60, 40, 20, 0.15);
+        }
+
+        .card-transparent:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 32px -16px rgba(70, 45, 25, 0.25);
+            background: rgba(255, 252, 245, 0.94);
+        }
+
+        .insight-badge {
+            background: #EBDDCB;
+            color: #5C3E2B;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .card-title-custom {
+            color: #5C3E2B;
+            font-weight: 700;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #DECAAE;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+        }
+
+        .form-control:focus {
+            border-color: #8B5A3C;
+            box-shadow: 0 0 0 0.2rem rgba(139, 90, 60, 0.25);
+            background: white;
+        }
+
+        .form-label {
+            color: #5C3E2B;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #8B5A3C;
+            border: none;
+            border-radius: 60px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #6B432B;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            border-radius: 60px;
+            border: 1px solid #CBB595;
+            color: #6B4C34;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-secondary:hover {
+            background: #EBDDCB;
+            border-color: #A77C58;
+            color: #4A3320;
+        }
+
+        .graph-container {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: 1rem;
+            border: 1px solid #DECAAE;
+        }
+
+        .graph-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+        }
+
+        .text-muted-earth {
+            color: #5C3E2B !important;
+            opacity: 0.85;
+        }
+
+        hr {
+            color: #DECAAE;
+            opacity: 0.5;
+        }
+
+        .alert-success {
+            background: rgba(45, 106, 79, 0.9);
+            border: none;
+            color: white;
+            border-radius: 20px;
+        }
+
+        .alert-danger {
+            background: rgba(157, 107, 83, 0.9);
+            border: none;
+            color: white;
+            border-radius: 20px;
+        }
+
+        footer {
+            border-top: 1px solid rgba(224, 205, 179, 0.7);
+            color: #7A5A40;
+            background: transparent;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 2rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero-section text-center">
+    <div class="container">
+        <span class="badge-pulse"><i class="fas fa-chart-line me-2"></i> STATISTICAL BASELINE · LINEAR REGRESSION</span>
+        <h1 class="display-4 fw-bold" style="letter-spacing: -0.02em;">Linear Regression Model</h1>
+        <p class="lead opacity-90 mt-2 mx-auto" style="max-width: 700px;">
+            Predicting user adaptation and engagement (Beta Rating) using linear relationships between digital behavior metrics.
+        </p>
+        <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+            <span class="badge bg-white text-dark bg-opacity-20 px-3 py-2 rounded-pill" style="background: rgba(255,245,230,0.25); color:#FEF0E0;"><i class="fas fa-chart-line me-1"></i> OLS Regression</span>
+            <span class="badge bg-white text-dark bg-opacity-20 px-3 py-2 rounded-pill" style="background: rgba(255,245,230,0.25); color:#FEF0E0;"><i class="fas fa-calculator me-1"></i> Continuous Output</span>
+            <span class="badge bg-white text-dark bg-opacity-20 px-3 py-2 rounded-pill" style="background: rgba(255,245,230,0.25); color:#FEF0E0;"><i class="fas fa-chart-scatter me-1"></i> Statistical Baseline</span>
         </div>
     </div>
+</div>
 
-    <div class="row mb-5">
-        <div class="col-md-6 d-flex align-items-center">
-            <div>
-                <h4>Análisis de la Gráfica</h4>
-                <p>La gráfica de la derecha muestra la evaluación del modelo sobre los datos de prueba que nunca antes había visto.</p>
-                <ul>
-                    <li>El eje <strong>X</strong> muestra el puntaje real otorgado en el Dataset.</li>
-                    <li>El eje <strong>Y</strong> muestra el puntaje que predijo la inteligencia artificial.</li>
-                    <li>La línea <strong class="text-danger">Roja punteada</strong> representa la predicción perfecta. Mientras más cerca estén los puntos azules a esta línea, más preciso es nuestro modelo.</li>
-                </ul>
+<div class="container mb-5">
+    <div class="row g-4">
+        
+        <div class="col-lg-6">
+            <div class="card card-transparent p-3" data-aos="fade-right" data-aos-duration="600">
+                <div class="card-body">
+                    <span class="insight-badge mb-2"><i class="fas fa-question-circle me-1"></i> What does this model do?</span>
+                    <h4 class="card-title-custom">Linear Regression</h4>
+                    <p class="text-muted-earth">
+                        <strong>Linear Regression</strong> is a Machine Learning algorithm that finds the relationship between a dependent variable and one or more independent variables by fitting a straight line to the data.
+                    </p>
+                    <p class="text-muted-earth">
+                        For <strong>FocusPet</strong>, we use all interaction statistics (age, screen time reduction, trivias won, rewards, etc.) to <strong>predict the final rating (beta_rating)</strong> that a user would give to the application.
+                    </p>
+                    <div class="mt-3 pt-2">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="p-2" style="background: rgba(139, 90, 60, 0.1); border-radius: 16px;">
+                                    <i class="fas fa-chart-line fa-2x" style="color: #8B5A3C;"></i>
+                                    <p class="small mb-0 fw-bold" style="color:#5C3E2B;">OLS</p>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2" style="background: rgba(139, 90, 60, 0.1); border-radius: 16px;">
+                                    <i class="fas fa-calculator fa-2x" style="color: #8B5A3C;"></i>
+                                    <p class="small mb-0 fw-bold" style="color:#5C3E2B;">Continuous</p>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2" style="background: rgba(139, 90, 60, 0.1); border-radius: 16px;">
+                                    <i class="fas fa-database fa-2x" style="color: #8B5A3C;"></i>
+                                    <p class="small mb-0 fw-bold" style="color:#5C3E2B;">Baseline</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-md-6 text-center">
-            <img src="{{ url_for('static', filename='images/lr_results.png') }}" alt="Resultados de Regresión Lineal" class="img-fluid border rounded shadow-sm">
+
+        <div class="col-lg-6">
+            <div class="card card-transparent p-3" data-aos="fade-left" data-aos-duration="600">
+                <div class="card-body">
+                    <span class="insight-badge mb-2"><i class="fas fa-chart-line me-1"></i> Graph Analysis</span>
+                    <h4 class="card-title-custom">Model Evaluation</h4>
+                    <p class="text-muted-earth small">
+                        The graph shows the model evaluation on test data that the model has never seen before.
+                    </p>
+                    <ul class="small text-muted-earth">
+                        <li><strong>X axis:</strong> Actual rating from the Dataset.</li>
+                        <li><strong>Y axis:</strong> Rating predicted by the artificial intelligence.</li>
+                        <li><strong>Red dotted line:</strong> Represents perfect prediction. The closer the blue points are to this line, the more accurate our model is.</li>
+                    </ul>
+                    <div class="graph-container mt-3">
+                        <img src="{{ url_for('static', filename='images/lr_results.png') }}" alt="Linear Regression Results">
+                    </div>
+                </div>
+            </div>
         </div>
+
     </div>
 
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">Haz una Predicción en Vivo</h4>
-        </div>
+    <div class="card card-transparent mt-4 p-4" data-aos="fade-up" data-aos-duration="600">
         <div class="card-body">
+            <span class="insight-badge mb-2"><i class="fas fa-robot me-1"></i> Live Prediction</span>
+            <h4 class="card-title-custom">Make a Live Prediction</h4>
             
             {% if error %}
-            <div class="alert alert-danger">{{ error }}</div>
+            <div class="alert alert-danger mt-3">{{ error }}</div>
             {% endif %}
 
             <form method="POST" action="/linearregression">
-                <div class="row g-3">
+                <div class="row g-3 mt-2">
                     <div class="col-md-3">
-                        <label>Edad</label>
+                        <label class="form-label small fw-bold">Age</label>
                         <input type="number" step="any" name="age" class="form-control" required>
                     </div>
                     <div class="col-md-3">
-                        <label>Screen Time Pre (hrs)</label>
+                        <label class="form-label small fw-bold">Screen Time Pre (hrs)</label>
                         <input type="number" step="any" name="screen_time_pre" class="form-control" required>
                     </div>
                     <div class="col-md-3">
-                        <label>Screen Time Post (hrs)</label>
+                        <label class="form-label small fw-bold">Screen Time Post (hrs)</label>
                         <input type="number" step="any" name="screen_time_post" class="form-control" required>
                     </div>
                     <div class="col-md-3">
-                        <label>Sesiones Exitosas</label>
+                        <label class="form-label small fw-bold">Successful Sessions</label>
                         <input type="number" step="any" name="successful_sessions" class="form-control" required>
                     </div>
                     <div class="col-md-3">
-                        <label>Sesiones Fallidas</label>
+                        <label class="form-label small fw-bold">Failed Sessions</label>
                         <input type="number" step="any" name="failed_sessions" class="form-control" required>
                     </div>
                     <div class="col-md-3">
-                        <label>Interacciones</label>
+                        <label class="form-label small fw-bold">Interactions</label>
                         <input type="number" step="any" name="rangel_interactions" class="form-control" required>
                     </div>
                     <div class="col-md-3">
-                        <label>Trivias Ganadas</label>
+                        <label class="form-label small fw-bold">Trivias Won</label>
                         <input type="number" step="any" name="trivias_won" class="form-control" required>
                     </div>
                     <div class="col-md-3">
-                        <label>Recompensas Canjeadas</label>
+                        <label class="form-label small fw-bold">Rewards Redeemed</label>
                         <input type="number" step="any" name="rewards_redeemed" class="form-control" required>
                     </div>
                 </div>
                 <div class="mt-4 text-center">
-                    <button type="submit" class="btn btn-primary px-5">Predecir Rating (Beta)</button>
-                    <a href="/" class="btn btn-secondary px-5">Volver al Inicio</a>
+                    <button type="submit" class="btn btn-primary px-5">Predict Beta Rating</button>
+                    <a href="/" class="btn btn-secondary px-5">Back to Home</a>
                 </div>
             </form>
 
             {% if prediction %}
             <div class="alert alert-success mt-4 text-center">
-                <h4 class="mb-0">La calificación estimada del usuario será de: <strong>{{ prediction }} / 5.0</strong></h4>
+                <h4 class="mb-0">Estimated user rating: <strong>{{ prediction }} / 5.0</strong></h4>
             </div>
             {% endif %}
 
@@ -101,5 +341,12 @@
     </div>
 </div>
 
+<footer class="text-center py-4 mt-2">
+    <p class="mb-0 small"><i class="fas fa-paw"></i> FocusPet · Linear Regression — statistical baseline model for rating prediction.</p>
+</footer>
+
+<script>
+    AOS.init({ duration: 800, once: true, offset: 20 });
+</script>
 </body>
 </html>
