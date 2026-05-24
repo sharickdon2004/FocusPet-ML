@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score
 import joblib
 import os
 import matplotlib
-matplotlib.use('Agg') # Evita errores de hilos en entornos web
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 class RandomForestModel:
@@ -108,14 +108,14 @@ class RandomForestModel:
     def procesar(self, form):
         try:
             datos = [[
-                float(form["edad"]),
-                float(form["horas_pantalla_pre"]),
-                float(form["horas_pantalla_post"]),
-                float(form["sesiones_exitosas"]),
-                float(form["sesiones_fallidas"]),
-                float(form["interacciones_rangel"]),
-                float(form["trivias_won"]),
-                float(form["recompensas_canjeadas"]),
+                float(form["age"]),
+                float(form["screen_time_pre"]),
+                float(form["screen_time_post"]),
+                float(form["sessions_successful"]),
+                float(form["sessions_failed"]),
+                float(form["interactions_range"]),
+                float(form["trivia_won"]),
+                float(form["rewards_redeemed"]),
             ]]
 
             prediccion = self.model.predict(datos)[0]
@@ -132,13 +132,33 @@ class RandomForestModel:
             return {"error": str(e)}
 
     def get_messages(self, calificacion):
-        mensajes = {
-            5: {"title": "Excelente (Nivel 5)", "description": "Usuario con una adaptación digital impecable. Sabe balancear perfectamente la productividad con el entretenimiento.", "motivation": "¡Increíble! Sigue manteniendo este nivel de disciplina digital."},
-            4: {"title": "Bueno (Nivel 4)", "description": "Buen comportamiento y hábitos saludables. El usuario responde positivamente a los estímulos de enfoque.", "motivation": "¡Vas por excelente camino! Unos ajustes más y llegarás al nivel óptimo."},
-            3: {"title": "Regular (Nivel 3)", "description": "Se detectan inconsistencias. El tiempo en pantalla post-uso bajó levemente pero las sesiones fallidas son considerables.", "motivation": "Pequeños cambios diarios generarán un gran impacto a largo plazo."},
-            2: {"title": "Requiere Mejora (Nivel 2)", "description": "Baja adaptación digital. El usuario pasa mucho tiempo en pantalla y completa pocas tareas recomendadas.", "motivation": "¡No te rindas! FocusPet tiene las herramientas para ayudarte a mejorar hoy mismo."},
-            1: {"title": "Crítico (Nivel 1)", "description": "Adaptación digital muy baja. Patrón de uso disperso con alto índice de sesiones abandonadas o fallidas.", "motivation": "Es momento de hacer una pausa y reestructurar tus hábitos de enfoque."},
-        }
-        return mensajes.get(calificacion, mensajes[3])
+        messages = {
+                        5: {
+        "title": "Excellent (Level 5)", 
+        "description": "User with impeccable digital adaptation. Knows how to perfectly balance productivity with entertainment.", 
+        "motivation": "Incredible! Keep maintaining this level of digital discipline."
+    },
+                        4: {
+        "title": "Good (Level 4)", 
+        "description": "Good behavior and healthy habits. The user responds positively to focus stimuli.", 
+        "motivation": "You are on an excellent path! A few more adjustments and you will reach the optimal level."
+    },
+                        3: {
+        "title": "Regular (Level 3)", 
+        "description": "Inconsistencies detected. Post-use screen time decreased slightly, but failed sessions are significant.", 
+        "motivation": "Small daily changes will generate a big impact in the long term."
+    },
+                        2: {
+        "title": "Needs Improvement (Level 2)", 
+        "description": "Low digital adaptation. The user spends a lot of time on screen and completes few recommended tasks.", 
+        "motivation": "Don't give up! FocusPet has the tools to help you improve today."
+    },
+                        1: {
+        "title": "Critical (Level 1)", 
+        "description": "Very low digital adaptation. Dispersed usage pattern with a high rate of abandoned or failed sessions.", 
+        "motivation": "It's time to take a pause and restructure your focus habits."
+    }
+}
+        return messages.get(calificacion, messages[3])
 
 model = RandomForestModel()
